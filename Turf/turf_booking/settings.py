@@ -6,7 +6,7 @@ SECRET_KEY = 'unsafe-secret-key'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.18', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.onrender.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
