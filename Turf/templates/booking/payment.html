@@ -1,0 +1,80 @@
+{% extends "booking/base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'booking/css/style.css' %}">
+
+<div style="max-width:900px;margin:60px auto;padding:30px;border-radius:20px;
+background:linear-gradient(145deg,#020617,#0f172a);
+box-shadow:0 0 40px rgba(0,0,0,0.6);
+color:white">
+
+  <h1 style="font-size:32px;margin-bottom:10px;color:#4ade80;">
+    Confirm Booking
+  </h1>
+
+  <p style="opacity:0.8;margin-bottom:30px;">
+    {{ sport.name }} Arena — {{ date|date:"d M Y" }}
+  </p>
+
+  <!-- SELECTED SLOTS -->
+  <div style="margin-bottom:30px;">
+    <h3 style="margin-bottom:15px;">Selected Slots</h3>
+
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      {% for slot in slots %}
+        <div style="display:flex;justify-content:space-between;align-items:center;
+                    background:#020617;padding:14px 18px;border-radius:12px;
+                    border:1px solid rgba(255,255,255,0.08)">
+
+          <span style="font-size:16px;">
+            {{ slot.start_label }} – {{ slot.end_label }}
+          </span>
+
+          <!-- ✅ FIXED PRICE -->
+          <span style="color:#4ade80;font-weight:bold;">
+            ₹{{ slot.price }}
+          </span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- TOTAL -->
+  <div style="display:flex;justify-content:space-between;
+              padding:18px;border-radius:14px;
+              background:#020617;border:1px solid rgba(255,255,255,0.1);
+              margin-bottom:30px;">
+    <strong>Total Amount</strong>
+    <strong style="color:#4ade80;font-size:20px;">
+      ₹{{ total }}
+    </strong>
+  </div>
+
+  <!-- CONFIRM FORM -->
+  <form method="POST" action="{% url 'confirm_booking' %}">
+    {% csrf_token %}
+
+    {% for slot in slots %}
+      <input type="hidden" name="slots[]" value="{{ slot.id }}">
+    {% endfor %}
+
+    <input type="hidden" name="user_name" value="{{ user_name }}">
+    <input type="hidden" name="phone" value="{{ phone }}">
+
+    <button style="
+      width:100%;
+      padding:16px;
+      font-size:18px;
+      border:none;
+      border-radius:16px;
+      background:linear-gradient(135deg,#22c55e,#4ade80);
+      color:black;
+      font-weight:bold;
+      cursor:pointer;">
+      Pay & Confirm Booking
+    </button>
+  </form>
+
+</div>
+{% endblock %}

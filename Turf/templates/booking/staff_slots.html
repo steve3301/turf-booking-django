@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Staff Dashboard</title>
+
+  <!-- IMPORTANT: Mobile scaling -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="{% static 'booking/css/staff_dashboard.css' %}">
+</head>
+
+<body>
+
+<header class="topbar">
+  <h1>Staff Dashboard</h1>
+  <a href="{% url 'staff_logout' %}" class="logout">Exit</a>
+</header>
+
+<div class="container">
+
+  <!-- TITLE -->
+  <h2>{{ sport.name }} — {{ selected_date|date:"d M Y" }}</h2>
+
+  <!-- ================= DATE SELECTOR ================= -->
+  <div class="date-strip">
+    {% for d in dates %}
+      <a href="?date={{ d|date:'Y-m-d' }}"
+         class="date-pill {% if d == selected_date %}active{% endif %}">
+        <div class="day">{{ d|date:"D" }}</div>
+        <div class="num">{{ d|date:"d" }}</div>
+        <div class="month">{{ d|date:"M" }}</div>
+      </a>
+    {% endfor %}
+  </div>
+
+  <!-- ================= SLOT GRID ================= -->
+  <div class="slots-grid">
+    {% for slot in slots %}
+
+      {% if slot.is_booked %}
+        <div class="slot-card booked">
+          <div class="time">{{ slot.start_label }} – {{ slot.end_label }}</div>
+          <div class="status">BOOKED</div>
+        </div>
+
+      {% elif selected_date == today and slot.time.hour < current_hour %}
+        <div class="slot-card booked">
+          <div class="time">{{ slot.start_label }} – {{ slot.end_label }}</div>
+          <div class="status">EXPIRED</div>
+        </div>
+
+      {% else %}
+        <div class="slot-card free"
+             data-id="{{ slot.id }}"
+             onclick="toggleSlot(this)">
+          <div class="time">{{ slot.start_label }} – {{ slot.end_label }}</div>
+          <div class="status">AVAILABLE</div>
+        </div>
+      {% endif %}
+
+    {% endfor %}
+  </div>
+
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + "=")) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+const csrftoken = getCookie("csrftoken");
+
+function toggleSlot(el) {
+  const slotId = el.dataset.id;
+
+  fetch(`/staff/toggle/${slotId}/`, {
+    method: "POST",
+    headers: {
+      "X-CSRFToken": csrftoken,
+    },
+    credentials: "same-origin"
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.booked) {
+      el.classList.remove("free");
+      el.classList.add("booked");
+      el.querySelector(".status").innerText = "BOOKED";
+    } else {
+      el.classList.remove("booked");
+      el.classList.add("free");
+      el.querySelector(".status").innerText = "AVAILABLE";
+    }
+  });
+}
+</script>
+
+</body>
+</html>

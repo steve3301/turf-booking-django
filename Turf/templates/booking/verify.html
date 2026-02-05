@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Booking Verification</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'booking/css/verify.css' %}">
+</head>
+
+<body>
+
+<div class="card">
+
+  {% if status == "valid" %}
+    <div class="tick">✅</div>
+    <div class="valid">BOOKING VALID</div>
+
+    <div class="info">
+      <p><strong>Name:</strong> {{ booking.user_name }}</p>
+      <p><strong>Phone:</strong> {{ booking.phone }}</p>
+
+      <p><strong>Turf:</strong> {{ slot.sport.name }}</p>
+      <p><strong>Date:</strong> {{ slot.date }}</p>
+      <p><strong>Active Slot:</strong> {{ slot.display_time }}</p>
+
+      <p><strong>All Slots:</strong></p>
+      <ul>
+        {% for s in slots %}
+          <li>{{ s.display_time }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  {% elif status == "expired" %}
+    <div class="cross">❌</div>
+    <div class="invalid">BOOKING EXPIRED</div>
+
+    <div class="info">
+      <p><strong>Name:</strong> {{ booking.user_name }}</p>
+      <p><strong>Turf:</strong> {{ slots.first.sport.name }}</p>
+    </div>
+
+  {% elif status == "early" %}
+    <div class="cross">⏳</div>
+    <div class="invalid">TOO EARLY</div>
+    <p>Booking is valid but the time has not started yet.</p>
+
+  {% else %}
+    <div class="cross">❌</div>
+    <div class="invalid">INVALID BOOKING</div>
+    <p>This QR code is not valid.</p>
+  {% endif %}
+
+</div>
+
+</body>
+</html>
