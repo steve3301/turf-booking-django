@@ -7,12 +7,12 @@ from datetime import datetime, timedelta
 # ================= SPORT =================
 
 class Sport(models.Model):
-    name = models.CharField(max_length=50)
-    image = models.ImageField(upload_to="sports/", blank=True, null=True)
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+    price = models.IntegerField(default=300)
 
     def __str__(self):
         return self.name
-
 
 
 
