@@ -300,3 +300,6 @@ def gallery(request):
     return render(request, "booking/gallery.html", {
         "images": images
     })
+
+def success(request):
+    return redirect("home")
