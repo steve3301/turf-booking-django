@@ -1,0 +1,53 @@
+/* ===== DUGOUT ADMIN THEME ===== */
+
+:root {
+  --primary: #22c55e;
+  --secondary: #0f172a;
+}
+
+/* Header */
+#header {
+  background: linear-gradient(135deg, #020617, #0f172a);
+  border-bottom: 1px solid #1f2937;
+}
+
+#header h1 {
+  color: white !important;
+}
+
+/* Sidebar */
+.module h2, .module caption {
+  background: #020617;
+  color: #22c55e;
+}
+
+/* Buttons */
+.button, input[type=submit], .submit-row input {
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+  border-radius: 6px;
+  color: black;
+  font-weight: bold;
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+/* Links */
+a {
+  color: #22c55e;
+}
+
+a:hover {
+  color: #4ade80;
+}
+
+/* Tables */
+thead th {
+  background: #020617;
+  color: #22c55e;
+}
+
+tr:nth-child(even) {
+  background: #0f172a;
+}

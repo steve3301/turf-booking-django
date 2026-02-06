@@ -1,0 +1,83 @@
+/* ===============================
+   STAFF QR VERIFICATION PAGE
+   =============================== */
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  font-family: Arial, sans-serif;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card container */
+.card {
+  max-width: 420px;
+  width: 92%;
+  padding: 30px;
+  border-radius: 22px;
+  background: #020617;
+  border: 1px solid #1f2937;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+
+/* Status icons */
+.tick,
+.cross {
+  font-size: 60px;
+  margin-bottom: 10px;
+}
+
+/* Status text */
+.valid {
+  color: #22c55e;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.invalid {
+  color: #ef4444;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* Info box */
+.info {
+  background: #0f172a;
+  padding: 18px;
+  border-radius: 14px;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.info p {
+  margin: 8px 0;
+  font-size: 15px;
+}
+
+.info ul {
+  margin: 8px 0 0 18px;
+  padding: 0;
+}
+
+.info li {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+/* Mobile optimization */
+@media (max-width: 480px) {
+  .valid,
+  .invalid {
+    font-size: 24px;
+  }
+
+  .tick,
+  .cross {
+    font-size: 52px;
+  }
+}

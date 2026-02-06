@@ -11,16 +11,15 @@ border:1px solid #1f2937;color:white">
     Please save this QR. Show it at the turf for entry.
   </p>
 
-  <!-- ================= QR ================= -->
+  <!-- QR -->
   <div style="text-align:center;margin:25px 0;">
     <img
       src="data:image/png;base64,{{ qr_code }}"
-      style="width:200px;height:200px;
-             background:white;padding:10px;
-             border-radius:16px;">
+      style="width:200px;height:200px;background:white;
+             padding:10px;border-radius:16px;">
   </div>
 
-  <!-- ================= DOWNLOAD ================= -->
+  <!-- DOWNLOAD -->
   <div style="text-align:center;margin-bottom:25px;">
     <a href="{% url 'download_booking_pdf' booking.booking_id %}"
        style="display:inline-block;
@@ -34,31 +33,32 @@ border:1px solid #1f2937;color:white">
     </a>
   </div>
 
-  <!-- ================= BOOKING INFO ================= -->
+  <!-- DETAILS -->
   <div style="background:#0f172a;padding:20px;border-radius:16px;">
-
     <p><strong>Booking ID:</strong><br>{{ booking.booking_id }}</p>
     <p><strong>Name:</strong> {{ booking.user_name }}</p>
     <p><strong>Phone:</strong> {{ booking.phone }}</p>
 
-    {% with slots.0 as first_slot %}
+    {% with booking.slots.first as first_slot %}
       <p><strong>Turf:</strong> {{ first_slot.sport.name }}</p>
-      <p><strong>Date:</strong> {{ first_slot.date }}</p>
+      <p><strong>Date:</strong> {{ first_slot.date|date:"d M Y" }}</p>
     {% endwith %}
 
     <hr style="margin:15px 0;border-color:#1f2937;">
 
     <strong>Booked Slots:</strong>
     <ul style="margin-top:10px;">
-      {% for slot in slots %}
-        <li>
-          {{ slot.start_label }} – {{ slot.end_label }}
-        </li>
+      {% for slot in booking.slots.all %}
+        {% with start=slot.time %}
+          <li>
+            {{ start|time:"h:i A" }} –
+            {{ start|time:"h:i A"|add:"1 hour" }}
+          </li>
+        {% endwith %}
       {% empty %}
         <li>No slots found</li>
       {% endfor %}
     </ul>
-
   </div>
 
 </div>
