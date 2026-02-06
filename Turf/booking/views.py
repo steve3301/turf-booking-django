@@ -230,3 +230,8 @@ def gallery(request):
     return render(request, "booking/gallery.html", {
         "images": images
     })
+
+from django.shortcuts import redirect
+
+def success(request):
+    return redirect("home")
