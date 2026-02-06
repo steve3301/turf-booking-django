@@ -56,15 +56,6 @@ def staff_required(view_func):
     return wrapper
 
 
-# ================= STAFF DASHBOARD =================
-
-@staff_required
-def staff_dashboard(request):
-    return render(request, "booking/staff_dashboard.html", {
-        "sports": Sport.objects.all()
-    })
-
-
 # ================= HOME =================
 
 def home(request):
@@ -84,7 +75,6 @@ def slots_view(request, sport_id):
             request.GET.get("date"), "%Y-%m-%d"
         ).date()
 
-    # Ensure 24 slots exist
     for hour in range(24):
         Slot.objects.get_or_create(
             sport=sport,
@@ -154,7 +144,7 @@ def payment_page(request):
     })
 
 
-# ================= QR (RENDER SAFE) =================
+# ================= QR =================
 
 def generate_qr_base64(booking):
     qr_data = f"{settings.SITE_URL}/verify/{booking.booking_id}/"
@@ -162,7 +152,6 @@ def generate_qr_base64(booking):
 
     buffer = BytesIO()
     qr.save(buffer, format="PNG")
-
     return base64.b64encode(buffer.getvalue()).decode()
 
 
@@ -177,7 +166,6 @@ def confirm_booking(request):
     user_name = request.POST.get("user_name")
     phone = request.POST.get("phone")
 
-    # Lock slots to avoid double booking
     slots = Slot.objects.select_for_update().filter(
         id__in=slot_ids,
         is_booked=False
@@ -185,7 +173,7 @@ def confirm_booking(request):
 
     if slots.count() != len(slot_ids):
         return render(request, "booking/error.html", {
-            "message": "One or more selected slots are already booked."
+            "message": "One or more slots already booked"
         })
 
     booking = Booking.objects.create(
@@ -213,71 +201,11 @@ def confirm_booking(request):
     })
 
 
-# ================= PDF DOWNLOAD =================
+# ================= SUCCESS (REQUIRED) =================
+# This fixes the Render crash
 
-def download_booking_pdf(request, booking_id):
-    booking = get_object_or_404(Booking, booking_id=booking_id)
-
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = (
-        f'attachment; filename="booking_{booking.booking_id}.pdf"'
-    )
-
-    p = canvas.Canvas(response, pagesize=A4)
-    width, height = A4
-
-    p.setFont("Helvetica-Bold", 18)
-    p.drawString(140, height - 50, "Turf Booking Confirmation")
-
-    p.setFont("Helvetica", 12)
-    y = height - 120
-
-    details = [
-        f"Booking ID: {booking.booking_id}",
-        f"Name: {booking.user_name}",
-        f"Phone: {booking.phone}",
-        f"Slots booked: {booking.slots.count()}",
-        "Status: CONFIRMED",
-    ]
-
-    for line in details:
-        p.drawString(80, y, line)
-        y -= 22
-
-    qr_base64 = generate_qr_base64(booking)
-    qr_img = ImageReader(BytesIO(base64.b64decode(qr_base64)))
-    p.drawImage(qr_img, 80, y - 220, width=200, height=200)
-
-    p.showPage()
-    p.save()
-    return response
-
-
-# ================= STAFF SLOT PANEL =================
-
-@staff_required
-def staff_slots_view(request, sport_id):
-    sport = get_object_or_404(Sport, id=sport_id)
-    selected_date = timezone.localdate()
-
-    slots = Slot.objects.filter(sport=sport, date=selected_date)
-
-    return render(request, "booking/staff_slots.html", {
-        "sport": sport,
-        "slots": slots,
-        "selected_date": selected_date
-    })
-
-
-# ================= AJAX TOGGLE =================
-
-@require_POST
-@staff_required
-def toggle_slot_booking(request, slot_id):
-    slot = get_object_or_404(Slot, id=slot_id)
-    slot.is_booked = not slot.is_booked
-    slot.save()
-    return JsonResponse({"status": "success", "booked": slot.is_booked})
+def success(request):
+    return redirect("home")
 
 
 # ================= VERIFY =================
@@ -300,6 +228,3 @@ def gallery(request):
     return render(request, "booking/gallery.html", {
         "images": images
     })
-
-def success(request):
-    return redirect("home")
