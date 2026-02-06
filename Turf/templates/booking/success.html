@@ -13,11 +13,12 @@ border:1px solid #1f2937;color:white">
 
   <!-- QR -->
   <div style="text-align:center;margin:25px 0;">
-    <img src="/media/{{ booking.qr_path }}"
-         style="width:200px;height:200px;
-                background:white;padding:10px;
-                border-radius:16px;">
-  </div>
+  <img
+    src="data:image/png;base64,{{ qr_code }}"
+    style="width:200px;height:200px;background:white;
+           padding:10px;border-radius:16px;">
+</div>
+
 
   <!-- DOWNLOAD BUTTON -->
   <div style="text-align:center;margin-bottom:25px;">
@@ -49,7 +50,7 @@ border:1px solid #1f2937;color:white">
     <strong>Booked Slots:</strong>
     <ul style="margin-top:10px;">
       {% for slot in booking.slots.all %}
-        <li>{{ slot.display_time }}</li>
+        <li>{{ slot.start_label }} – {{ slot.end_label }}</li>
       {% endfor %}
     </ul>
   </div>

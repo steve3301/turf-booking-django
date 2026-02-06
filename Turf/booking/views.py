@@ -97,9 +97,7 @@ def slots_view(request, sport_id):
 
     selected_date = timezone.localdate()
     if request.GET.get("date"):
-        selected_date = datetime.strptime(
-            request.GET.get("date"), "%Y-%m-%d"
-        ).date()
+        selected_date = datetime.strptime(request.GET.get("date"), "%Y-%m-%d").date()
 
     for hour in range(24):
         Slot.objects.get_or_create(
@@ -145,7 +143,14 @@ def payment_page(request):
     phone = request.POST.get("phone")
 
     slots = Slot.objects.filter(id__in=slot_ids)
-    total = sum(get_slot_price(slot) for slot in slots)
+
+    total = 0
+    for slot in slots:
+        start = datetime.combine(slot.date, slot.time)
+        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
+        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
+        slot.price = get_slot_price(slot)
+        total += slot.price
 
     return render(request, "booking/payment.html", {
         "slots": slots,
@@ -181,6 +186,11 @@ def confirm_booking(request):
     booking = Booking.objects.create(user_name=user_name, phone=phone)
     booking.slots.set(slots)
     slots.update(is_booked=True)
+
+    for slot in slots:
+        start = datetime.combine(slot.date, slot.time)
+        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
+        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
 
     qr_code = generate_qr_base64(booking)
 
