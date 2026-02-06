@@ -68,11 +68,43 @@ def staff_dashboard(request):
 @staff_required
 def staff_slots_view(request, sport_id):
     sport = get_object_or_404(Sport, id=sport_id)
-    slots = Slot.objects.filter(sport=sport, date=timezone.localdate())
+
+    # Selected date
+    selected_date = timezone.localdate()
+    if request.GET.get("date"):
+        selected_date = datetime.strptime(
+            request.GET.get("date"), "%Y-%m-%d"
+        ).date()
+
+    # Ensure 24 slots exist
+    for hour in range(24):
+        Slot.objects.get_or_create(
+            sport=sport,
+            date=selected_date,
+            time=time(hour, 0)
+        )
+
+    slots = Slot.objects.filter(
+        sport=sport,
+        date=selected_date
+    ).order_by("time")
+
+    # Add labels for template
+    for slot in slots:
+        start = datetime.combine(slot.date, slot.time)
+        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
+        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
+
     return render(request, "booking/staff_slots.html", {
         "sport": sport,
-        "slots": slots
+        "slots": slots,
+        "selected_date": selected_date,
+        "dates": [timezone.localdate() + timedelta(days=i) for i in range(7)],
+        "today": timezone.localdate(),
+        "current_hour": timezone.localtime().hour,
     })
+
+
 
 
 @require_POST
