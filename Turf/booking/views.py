@@ -75,7 +75,7 @@ def staff_slots_view(request, sport_id):
             request.GET.get("date"), "%Y-%m-%d"
         ).date()
 
-    # Ensure 24 hourly slots
+    # Ensure 24 slots exist
     for hour in range(24):
         Slot.objects.get_or_create(
             sport=sport,
@@ -87,12 +87,6 @@ def staff_slots_view(request, sport_id):
         sport=sport,
         date=selected_date
     ).order_by("time")
-
-    # Time labels for staff view
-    for slot in slots:
-        start = datetime.combine(slot.date, slot.time)
-        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
-        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
 
     return render(request, "booking/staff_slots.html", {
         "sport": sport,
@@ -138,9 +132,6 @@ def slots_view(request, sport_id):
     slots = Slot.objects.filter(sport=sport, date=selected_date)
 
     for slot in slots:
-        start = datetime.combine(slot.date, slot.time)
-        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
-        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
         slot.price = get_slot_price(slot)
 
     return render(request, "booking/slots.html", {
@@ -171,15 +162,8 @@ def payment_page(request):
     user_name = request.POST.get("user_name")
     phone = request.POST.get("phone")
 
-    slots = Slot.objects.filter(id__in=slot_ids)
-
-    total = 0
-    for slot in slots:
-        start = datetime.combine(slot.date, slot.time)
-        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
-        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
-        slot.price = get_slot_price(slot)
-        total += slot.price
+    slots = Slot.objects.filter(id__in=slot_ids).order_by("time")
+    total = sum(get_slot_price(slot) for slot in slots)
 
     return render(request, "booking/payment.html", {
         "slots": slots,
@@ -223,22 +207,19 @@ def confirm_booking(request):
         user_name=user_name,
         phone=phone
     )
-    booking.slots.set(slots)
 
+    booking.slots.set(slots)
     Slot.objects.filter(id__in=[s.id for s in slots]).update(is_booked=True)
 
     qr_code = generate_qr_base64(booking)
 
     return render(request, "booking/success.html", {
         "booking": booking,
-        "qr_code": qr_code,
+        "qr_code": qr_code
     })
 
 
-
-def success(request):
-    return redirect("home")
-
+# ================= VERIFY / PDF =================
 
 def verify_booking(request, booking_id):
     booking = get_object_or_404(Booking, booking_id=booking_id)
@@ -249,14 +230,14 @@ def download_booking_pdf(request, booking_id):
     booking = get_object_or_404(Booking, booking_id=booking_id)
 
     response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = (
-        f'attachment; filename="booking_{booking.booking_id}.pdf"'
-    )
+    response["Content-Disposition"] = f'attachment; filename="booking_{booking.booking_id}.pdf"'
 
     p = canvas.Canvas(response, pagesize=A4)
+
     qr_base64 = generate_qr_base64(booking)
     qr_img = ImageReader(BytesIO(base64.b64decode(qr_base64)))
     p.drawImage(qr_img, 100, 500, width=200, height=200)
+
     p.showPage()
     p.save()
     return response

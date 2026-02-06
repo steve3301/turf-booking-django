@@ -13,10 +13,9 @@ border:1px solid #1f2937;color:white">
 
   <!-- QR -->
   <div style="text-align:center;margin:25px 0;">
-    <img
-      src="data:image/png;base64,{{ qr_code }}"
-      style="width:200px;height:200px;background:white;
-             padding:10px;border-radius:16px;">
+    <img src="data:image/png;base64,{{ qr_code }}"
+         style="width:200px;height:200px;background:white;
+                padding:10px;border-radius:16px;">
   </div>
 
   <!-- DOWNLOAD -->
@@ -49,12 +48,7 @@ border:1px solid #1f2937;color:white">
     <strong>Booked Slots:</strong>
     <ul style="margin-top:10px;">
       {% for slot in booking.slots.all %}
-        {% with start=slot.time %}
-          <li>
-            {{ start|time:"h:i A" }} –
-            {{ start|time:"h:i A"|add:"1 hour" }}
-          </li>
-        {% endwith %}
+        <li>{{ slot.display_time }}</li>
       {% empty %}
         <li>No slots found</li>
       {% endfor %}
