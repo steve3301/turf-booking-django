@@ -2,14 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # ---------- STAFF AUTH ----------
-    path("staff/login/", views.staff_login, name="staff_login"),
-    path("staff/logout/", views.staff_logout, name="staff_logout"),
-    path("staff/dashboard/", views.staff_dashboard, name="staff_dashboard"),
-
-    # ---------- STAFF PANEL ----------
-    path("staff/booking/<int:sport_id>/", views.staff_slots_view, name="staff_slots"),
-    path("staff/toggle/<int:slot_id>/", views.toggle_slot_booking, name="toggle_slot"),
 
     # ---------- PUBLIC ----------
     path("", views.home, name="home"),
@@ -22,8 +14,16 @@ urlpatterns = [
     path("verify/<uuid:booking_id>/", views.verify_booking, name="verify_booking"),
     path("download/<uuid:booking_id>/", views.download_booking_pdf, name="download_booking_pdf"),
 
-    # ---------- EXTRA ----------
-    path("success/", views.success, name="success"),
+    # ---------- STAFF AUTH ----------
+    path("staff/login/", views.staff_login, name="staff_login"),
+    path("staff/logout/", views.staff_logout, name="staff_logout"),
+    path("staff/dashboard/", views.staff_dashboard, name="staff_dashboard"),
+
+    # ---------- STAFF PANEL ----------
+    path("staff/booking/<int:sport_id>/", views.staff_slots_view, name="staff_slots"),
+    path("staff/toggle/<int:slot_id>/", views.toggle_slot_booking, name="toggle_slot"),
+
+    # ---------- STATIC ----------
     path("gallery/", views.gallery, name="gallery"),
     path("contact/", views.contact_page, name="contact"),
 ]
