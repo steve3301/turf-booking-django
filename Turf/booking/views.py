@@ -1,5 +1,3 @@
-# force redeploy
-
 from datetime import datetime, timedelta, time
 from functools import wraps
 import base64
@@ -58,15 +56,41 @@ def staff_required(view_func):
     return wrapper
 
 
-# ================= HOME =================
+# ================= STAFF DASHBOARD (MISSING BEFORE) =================
+
+@staff_required
+def staff_dashboard(request):
+    return render(request, "booking/staff_dashboard.html", {
+        "sports": Sport.objects.all()
+    })
+
+
+@staff_required
+def staff_slots_view(request, sport_id):
+    sport = get_object_or_404(Sport, id=sport_id)
+    slots = Slot.objects.filter(sport=sport, date=timezone.localdate())
+    return render(request, "booking/staff_slots.html", {
+        "sport": sport,
+        "slots": slots
+    })
+
+
+@require_POST
+@staff_required
+def toggle_slot_booking(request, slot_id):
+    slot = get_object_or_404(Slot, id=slot_id)
+    slot.is_booked = not slot.is_booked
+    slot.save()
+    return JsonResponse({"status": "success", "booked": slot.is_booked})
+
+
+# ================= PUBLIC =================
 
 def home(request):
     return render(request, "booking/home.html", {
         "sports": Sport.objects.all()
     })
 
-
-# ================= SLOT LIST =================
 
 def slots_view(request, sport_id):
     sport = get_object_or_404(Sport, id=sport_id)
@@ -102,8 +126,6 @@ def slots_view(request, sport_id):
     })
 
 
-# ================= USER DETAILS =================
-
 def user_details(request):
     if request.method != "POST":
         return redirect("home")
@@ -116,8 +138,6 @@ def user_details(request):
         "slot_ids": slot_ids
     })
 
-
-# ================= PAYMENT =================
 
 def payment_page(request):
     if request.method != "POST":
@@ -146,18 +166,15 @@ def payment_page(request):
     })
 
 
-# ================= QR =================
+# ================= BOOKING =================
 
 def generate_qr_base64(booking):
     qr_data = f"{settings.SITE_URL}/verify/{booking.booking_id}/"
     qr = qrcode.make(qr_data)
-
     buffer = BytesIO()
     qr.save(buffer, format="PNG")
     return base64.b64encode(buffer.getvalue()).decode()
 
-
-# ================= CONFIRM BOOKING =================
 
 @transaction.atomic
 def confirm_booking(request):
@@ -203,21 +220,39 @@ def confirm_booking(request):
     })
 
 
-# ================= SUCCESS (REQUIRED) =================
-# This fixes the Render crash
-
 def success(request):
     return redirect("home")
 
-
-# ================= VERIFY =================
 
 def verify_booking(request, booking_id):
     booking = get_object_or_404(Booking, booking_id=booking_id)
     return render(request, "booking/verify.html", {"booking": booking})
 
 
-# ================= STATIC PAGES =================
+def download_booking_pdf(request, booking_id):
+    booking = get_object_or_404(Booking, booking_id=booking_id)
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = (
+        f'attachment; filename="booking_{booking.booking_id}.pdf"'
+    )
+
+    p = canvas.Canvas(response, pagesize=A4)
+    width, height = A4
+
+    p.setFont("Helvetica-Bold", 18)
+    p.drawString(150, height - 50, "Turf Booking Confirmation")
+
+    qr_base64 = generate_qr_base64(booking)
+    qr_img = ImageReader(BytesIO(base64.b64decode(qr_base64)))
+    p.drawImage(qr_img, 80, height - 350, width=200, height=200)
+
+    p.showPage()
+    p.save()
+    return response
+
+
+# ================= STATIC =================
 
 def contact_page(request):
     return render(request, "booking/contact.html", {
@@ -230,8 +265,3 @@ def gallery(request):
     return render(request, "booking/gallery.html", {
         "images": images
     })
-
-from django.shortcuts import redirect
-
-def success(request):
-    return redirect("home")
