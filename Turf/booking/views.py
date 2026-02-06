@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta, time
 from functools import wraps
-import os
+import base64
+from io import BytesIO
+
 import qrcode
 
 from django.db import transaction
@@ -13,10 +15,12 @@ from django.conf import settings
 
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
 
 from .models import Sport, Slot, Booking, Contact
 from .utils import get_slot_price
-from gallery.models import GalleryImage   
+from gallery.models import GalleryImage
+
 
 # ================= STAFF AUTH =================
 
@@ -69,7 +73,7 @@ def home(request):
     })
 
 
-# ================= USER SLOTS =================
+# ================= SLOT LIST =================
 
 def slots_view(request, sport_id):
     sport = get_object_or_404(Sport, id=sport_id)
@@ -80,6 +84,7 @@ def slots_view(request, sport_id):
             request.GET.get("date"), "%Y-%m-%d"
         ).date()
 
+    # Ensure 24 slots exist
     for hour in range(24):
         Slot.objects.get_or_create(
             sport=sport,
@@ -149,39 +154,66 @@ def payment_page(request):
     })
 
 
-# ================= QR =================
+# ================= QR (RENDER SAFE) =================
 
-def generate_qr(booking):
+def generate_qr_base64(booking):
     qr_data = f"{settings.SITE_URL}/verify/{booking.booking_id}/"
-    qr_img = qrcode.make(qr_data)
+    qr = qrcode.make(qr_data)
 
-    folder = os.path.join(settings.MEDIA_ROOT, "qrcodes")
-    os.makedirs(folder, exist_ok=True)
+    buffer = BytesIO()
+    qr.save(buffer, format="PNG")
 
-    path = os.path.join(folder, f"{booking.booking_id}.png")
-    qr_img.save(path)
-
-    return f"qrcodes/{booking.booking_id}.png"
+    return base64.b64encode(buffer.getvalue()).decode()
 
 
 # ================= CONFIRM BOOKING =================
 
 @transaction.atomic
 def confirm_booking(request):
+    if request.method != "POST":
+        return redirect("home")
+
     slot_ids = request.POST.getlist("slots[]")
     user_name = request.POST.get("user_name")
     phone = request.POST.get("phone")
 
-    slots = Slot.objects.select_for_update().filter(id__in=slot_ids, is_booked=False)
+    # Lock slots to avoid double booking
+    slots = Slot.objects.select_for_update().filter(
+        id__in=slot_ids,
+        is_booked=False
+    )
 
-    booking = Booking.objects.create(user_name=user_name, phone=phone)
+    if slots.count() != len(slot_ids):
+        return render(request, "booking/error.html", {
+            "message": "One or more selected slots are already booked."
+        })
+
+    booking = Booking.objects.create(
+        user_name=user_name,
+        phone=phone
+    )
+
     booking.slots.set(slots)
     slots.update(is_booked=True)
 
-    booking.qr_path = generate_qr(booking)
-    booking.save()
+    for slot in slots:
+        start = datetime.combine(slot.date, slot.time)
+        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
+        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
+        slot.price = get_slot_price(slot)
 
-    return render(request, "booking/success.html", {"booking": booking})
+    total = sum(slot.price for slot in slots)
+    qr_code = generate_qr_base64(booking)
+
+    return render(request, "booking/success.html", {
+        "booking": booking,
+        "slots": slots,
+        "total": total,
+        "qr_code": qr_code
+    })
+
+
+# ================= PDF DOWNLOAD =================
 
 def download_booking_pdf(request, booking_id):
     booking = get_object_or_404(Booking, booking_id=booking_id)
@@ -195,7 +227,7 @@ def download_booking_pdf(request, booking_id):
     width, height = A4
 
     p.setFont("Helvetica-Bold", 18)
-    p.drawString(150, height - 50, "Turf Booking Confirmation")
+    p.drawString(140, height - 50, "Turf Booking Confirmation")
 
     p.setFont("Helvetica", 12)
     y = height - 120
@@ -212,14 +244,14 @@ def download_booking_pdf(request, booking_id):
         p.drawString(80, y, line)
         y -= 22
 
-    if booking.qr_path:
-        qr_path = os.path.join(settings.MEDIA_ROOT, booking.qr_path)
-        if os.path.exists(qr_path):
-            p.drawImage(qr_path, 80, y - 220, width=200, height=200)
+    qr_base64 = generate_qr_base64(booking)
+    qr_img = ImageReader(BytesIO(base64.b64decode(qr_base64)))
+    p.drawImage(qr_img, 80, y - 220, width=200, height=200)
 
     p.showPage()
     p.save()
     return response
+
 
 # ================= STAFF SLOT PANEL =================
 
@@ -256,10 +288,6 @@ def verify_booking(request, booking_id):
 
 
 # ================= STATIC PAGES =================
-
-def success(request):
-    return render(request, "booking/success.html")
-
 
 def contact_page(request):
     return render(request, "booking/contact.html", {
