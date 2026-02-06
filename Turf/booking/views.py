@@ -76,7 +76,7 @@ def staff_slots_view(request, sport_id):
             request.GET.get("date"), "%Y-%m-%d"
         ).date()
 
-    # Ensure 24 slots exist
+    # Ensure 24 hourly slots exist
     for hour in range(24):
         Slot.objects.get_or_create(
             sport=sport,
@@ -89,11 +89,10 @@ def staff_slots_view(request, sport_id):
         date=selected_date
     ).order_by("time")
 
-    # Add labels for template
+    # Add display labels (LIKE USER PAGE)
     for slot in slots:
         start = datetime.combine(slot.date, slot.time)
-        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
-        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
+        slot.display_time = start.strftime("%-I %p").lower()  # 2 pm, 3 pm
 
     return render(request, "booking/staff_slots.html", {
         "sport": sport,
@@ -103,8 +102,6 @@ def staff_slots_view(request, sport_id):
         "today": timezone.localdate(),
         "current_hour": timezone.localtime().hour,
     })
-
-
 
 
 @require_POST
