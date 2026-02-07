@@ -6,10 +6,7 @@ background:#020617;border-radius:22px;
 border:1px solid #1f2937;color:white">
 
   <h2 style="color:#4ade80;">Booking Confirmed ✅</h2>
-
-  <p style="opacity:0.8;margin-bottom:20px;">
-    Please save this QR. Show it at the turf for entry.
-  </p>
+  <p style="opacity:0.8;">Please save this QR. Show it at the turf for entry.</p>
 
   <!-- QR -->
   <div style="text-align:center;margin:25px 0;">
@@ -34,9 +31,9 @@ border:1px solid #1f2937;color:white">
     <p><strong>Name:</strong> {{ booking.user_name }}</p>
     <p><strong>Phone:</strong> {{ booking.phone }}</p>
 
-    {% with booking.slots.first as first_slot %}
-      <p><strong>Turf:</strong> {{ first_slot.sport.name }}</p>
-      <p><strong>Date:</strong> {{ first_slot.date|date:"d M Y" }}</p>
+    {% with slots.0 as first %}
+      <p><strong>Turf:</strong> {{ first.sport.name }}</p>
+      <p><strong>Date:</strong> {{ first.date|date:"d M Y" }}</p>
     {% endwith %}
 
     <hr style="margin:15px 0;border-color:#1f2937;">
@@ -45,10 +42,8 @@ border:1px solid #1f2937;color:white">
     <ul style="margin-top:10px;">
       {% for slot in slots %}
         <li>
-          {{ slot.time }}
-          <span style="float:right;color:#4ade80;">
-            ₹{{ slot.price }}
-          </span>
+          {{ slot.start_label }} – {{ slot.end_label }}
+          <span style="float:right;color:#4ade80;">₹{{ slot.price }}</span>
         </li>
       {% endfor %}
     </ul>
@@ -57,9 +52,7 @@ border:1px solid #1f2937;color:white">
 
     <p style="font-size:18px;">
       <strong>Total Amount:</strong>
-      <span style="float:right;color:#4ade80;">
-        ₹{{ total_amount }}
-      </span>
+      <span style="float:right;color:#4ade80;">₹{{ total_amount }}</span>
     </p>
   </div>
 

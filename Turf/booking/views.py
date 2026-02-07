@@ -188,6 +188,8 @@ def confirm_booking(request):
         return redirect("home")
 
     slot_ids = request.POST.getlist("slots[]")
+    user_name = request.POST.get("user_name")
+    phone = request.POST.get("phone")
 
     slots = Slot.objects.select_for_update().filter(
         id__in=slot_ids,
@@ -198,31 +200,25 @@ def confirm_booking(request):
         return redirect("home")
 
     booking = Booking.objects.create(
-        user_name=request.POST.get("user_name"),
-        phone=request.POST.get("phone")
+        user_name=user_name,
+        phone=phone
     )
 
     booking.slots.set(slots)
     slots.update(is_booked=True)
 
-    slot_data = []
     total_amount = 0
 
     for slot in slots:
         start = datetime.combine(slot.date, slot.time)
-        end = start + timedelta(hours=1)
-        price = get_slot_price(slot)
-
-        total_amount += price
-
-        slot_data.append({
-            "time": f"{start.strftime('%I:%M %p')} – {end.strftime('%I:%M %p')}",
-            "price": price
-        })
+        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
+        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
+        slot.price = get_slot_price(slot)
+        total_amount += slot.price
 
     return render(request, "booking/success.html", {
         "booking": booking,
-        "slots": slot_data,
+        "slots": slots,
         "total_amount": total_amount,
         "qr_code": generate_qr_base64(booking),
     })
