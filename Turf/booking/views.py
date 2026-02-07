@@ -187,8 +187,10 @@ def confirm_booking(request):
     if request.method != "POST":
         return redirect("home")
 
+    slot_ids = request.POST.getlist("slots[]")
+
     slots = Slot.objects.select_for_update().filter(
-        id__in=request.POST.getlist("slots[]"),
+        id__in=slot_ids,
         is_booked=False
     ).order_by("time")
 
@@ -203,16 +205,28 @@ def confirm_booking(request):
     booking.slots.set(slots)
     slots.update(is_booked=True)
 
+    slot_data = []
+    total_amount = 0
+
     for slot in slots:
         start = datetime.combine(slot.date, slot.time)
-        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
-        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
+        end = start + timedelta(hours=1)
+        price = get_slot_price(slot)
+
+        total_amount += price
+
+        slot_data.append({
+            "time": f"{start.strftime('%I:%M %p')} – {end.strftime('%I:%M %p')}",
+            "price": price
+        })
 
     return render(request, "booking/success.html", {
         "booking": booking,
-        "slots": slots,
+        "slots": slot_data,
+        "total_amount": total_amount,
         "qr_code": generate_qr_base64(booking),
     })
+
 
 
 # ================= VERIFY / PDF =================
