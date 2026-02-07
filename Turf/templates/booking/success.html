@@ -1,9 +1,14 @@
 {% extends "booking/base.html" %}
 {% block content %}
 
-<div style="max-width:650px;margin:80px auto;padding:30px;
-background:#020617;border-radius:22px;
-border:1px solid #1f2937;color:white">
+<div style="
+max-width:650px;
+margin:80px auto;
+padding:30px;
+background:#020617;
+border-radius:22px;
+border:1px solid #1f2937;
+color:white">
 
   <h2 style="color:#4ade80;">Booking Confirmed ✅</h2>
 
@@ -11,34 +16,40 @@ border:1px solid #1f2937;color:white">
     Please save this QR. Show it at the turf for entry.
   </p>
 
-  <!-- QR -->
+  <!-- QR CODE -->
   <div style="text-align:center;margin:25px 0;">
-    <img src="data:image/png;base64,{{ qr_code }}"
-         style="width:200px;height:200px;background:white;
-                padding:10px;border-radius:16px;">
+    <img
+      src="data:image/png;base64,{{ qr_code }}"
+      style="
+        width:200px;
+        height:200px;
+        background:white;
+        padding:10px;
+        border-radius:16px;">
   </div>
 
-  <!-- DOWNLOAD -->
+  <!-- DOWNLOAD BUTTON -->
   <div style="text-align:center;margin-bottom:25px;">
     <a href="{% url 'download_booking_pdf' booking.booking_id %}"
-       style="display:inline-block;
-              background:#22c55e;
-              color:#020617;
-              padding:12px 22px;
-              border-radius:10px;
-              font-weight:600;
-              text-decoration:none;">
+       style="
+         display:inline-block;
+         background:#22c55e;
+         color:#020617;
+         padding:12px 22px;
+         border-radius:10px;
+         font-weight:600;
+         text-decoration:none;">
       ⬇ Download QR & Booking Details
     </a>
   </div>
 
-  <!-- DETAILS -->
+  <!-- BOOKING DETAILS -->
   <div style="background:#0f172a;padding:20px;border-radius:16px;">
     <p><strong>Booking ID:</strong><br>{{ booking.booking_id }}</p>
     <p><strong>Name:</strong> {{ booking.user_name }}</p>
     <p><strong>Phone:</strong> {{ booking.phone }}</p>
 
-    {% with booking.slots.first as first_slot %}
+    {% with slots.0 as first_slot %}
       <p><strong>Turf:</strong> {{ first_slot.sport.name }}</p>
       <p><strong>Date:</strong> {{ first_slot.date|date:"d M Y" }}</p>
     {% endwith %}
@@ -47,10 +58,8 @@ border:1px solid #1f2937;color:white">
 
     <strong>Booked Slots:</strong>
     <ul style="margin-top:10px;">
-      {% for slot in booking.slots.all %}
-        <li>{{ slot.display_time }}</li>
-      {% empty %}
-        <li>No slots found</li>
+      {% for slot in slots %}
+        <li>{{ slot.start_label }} – {{ slot.end_label }}</li>
       {% endfor %}
     </ul>
   </div>

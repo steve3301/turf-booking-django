@@ -6,6 +6,7 @@
 
 <div class="slots-wrapper">
 
+  <!-- HEADER -->
   <div class="slots-top">
     <h1>{{ sport.name }}</h1>
     <p>Choose your time. Lock your game.</p>
@@ -25,10 +26,10 @@
 
   <!-- FILTERS -->
   <div class="slot-filters">
-    <button class="filter active" onclick="filterSlots('all', this)">All</button>
-    <button class="filter" onclick="filterSlots('morning', this)">Morning</button>
-    <button class="filter" onclick="filterSlots('afternoon', this)">Afternoon</button>
-    <button class="filter" onclick="filterSlots('evening', this)">Evening</button>
+    <button type="button" class="filter active" onclick="filterSlots('all', this)">All</button>
+    <button type="button" class="filter" onclick="filterSlots('morning', this)">Morning</button>
+    <button type="button" class="filter" onclick="filterSlots('afternoon', this)">Afternoon</button>
+    <button type="button" class="filter" onclick="filterSlots('evening', this)">Evening</button>
   </div>
 
   <!-- SLOT GRID -->
@@ -37,13 +38,13 @@
 
       {% if slot.is_booked %}
         <div class="slot booked" data-hour="{{ slot.time.hour }}">
-          <h4>{{ slot.display_time }}</h4>
+          <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
           <span>Booked</span>
         </div>
 
       {% elif selected_date == today and slot.time.hour < current_hour %}
         <div class="slot expired" data-hour="{{ slot.time.hour }}">
-          <h4>{{ slot.display_time }}</h4>
+          <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
           <span>Expired</span>
         </div>
 
@@ -53,13 +54,16 @@
              data-id="{{ slot.id }}"
              data-price="{{ slot.price }}"
              onclick="toggleSelect(this)">
-          <h4>{{ slot.display_time }}</h4>
+          <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
           <span>₹{{ slot.price }}</span>
         </div>
       {% endif %}
 
+    {% empty %}
+      <p style="color:#94a3b8;">No slots available</p>
     {% endfor %}
   </div>
+
 </div>
 
 <!-- BOTTOM BAR -->
@@ -71,10 +75,12 @@
   <button id="proceedBtn" disabled onclick="submitBooking()">Proceed</button>
 </div>
 
+<!-- FORM -->
 <form id="bookingForm" method="POST" action="{% url 'user_details' %}">
   {% csrf_token %}
 </form>
 
+<!-- SCRIPT -->
 <script>
 let selectedSlots = new Map();
 
@@ -91,6 +97,7 @@ function toggleSelect(el) {
     el.classList.add("selected");
     selectedSlots.set(slotId, price);
   }
+
   updateSummary();
 }
 

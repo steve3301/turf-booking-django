@@ -33,9 +33,7 @@ def staff_login(request):
         if user and user.is_staff:
             login(request, user)
             return redirect("staff_dashboard")
-
         return render(request, "booking/staff_login.html", {"error": "Invalid credentials"})
-
     return render(request, "booking/staff_login.html")
 
 
@@ -77,10 +75,12 @@ def staff_slots_view(request, sport_id):
             time=time(hour, 0)
         )
 
-    slots = Slot.objects.filter(
-        sport=sport,
-        date=selected_date
-    ).order_by("time")
+    slots = Slot.objects.filter(sport=sport, date=selected_date).order_by("time")
+
+    for slot in slots:
+        start = datetime.combine(slot.date, slot.time)
+        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
+        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
 
     return render(request, "booking/staff_slots.html", {
         "sport": sport,
@@ -123,12 +123,12 @@ def slots_view(request, sport_id):
             time=time(hour, 0)
         )
 
-    slots = Slot.objects.filter(
-        sport=sport,
-        date=selected_date
-    ).order_by("time")
+    slots = Slot.objects.filter(sport=sport, date=selected_date).order_by("time")
 
     for slot in slots:
+        start = datetime.combine(slot.date, slot.time)
+        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
+        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
         slot.price = get_slot_price(slot)
 
     return render(request, "booking/slots.html", {
@@ -144,7 +144,6 @@ def slots_view(request, sport_id):
 def user_details(request):
     if request.method != "POST":
         return redirect("home")
-
     return render(request, "booking/user_details.html", {
         "slot_ids": request.POST.getlist("slots[]")
     })
@@ -156,6 +155,11 @@ def payment_page(request):
 
     slot_ids = request.POST.getlist("slots[]")
     slots = Slot.objects.filter(id__in=slot_ids).order_by("time")
+
+    for slot in slots:
+        start = datetime.combine(slot.date, slot.time)
+        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
+        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
 
     total = sum(get_slot_price(slot) for slot in slots)
 
@@ -199,8 +203,14 @@ def confirm_booking(request):
     booking.slots.set(slots)
     slots.update(is_booked=True)
 
+    for slot in slots:
+        start = datetime.combine(slot.date, slot.time)
+        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
+        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
+
     return render(request, "booking/success.html", {
         "booking": booking,
+        "slots": slots,
         "qr_code": generate_qr_base64(booking),
     })
 
