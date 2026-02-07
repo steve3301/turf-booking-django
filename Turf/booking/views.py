@@ -2,7 +2,6 @@ from datetime import datetime, timedelta, time
 from functools import wraps
 import base64
 from io import BytesIO
-
 import qrcode
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -35,9 +34,7 @@ def staff_login(request):
             login(request, user)
             return redirect("staff_dashboard")
 
-        return render(request, "booking/staff_login.html", {
-            "error": "Invalid credentials"
-        })
+        return render(request, "booking/staff_login.html", {"error": "Invalid credentials"})
 
     return render(request, "booking/staff_login.html")
 
@@ -56,7 +53,7 @@ def staff_required(view_func):
     return wrapper
 
 
-# ================= STAFF DASHBOARD =================
+# ================= STAFF =================
 
 @staff_required
 def staff_dashboard(request):
@@ -71,11 +68,8 @@ def staff_slots_view(request, sport_id):
 
     selected_date = timezone.localdate()
     if request.GET.get("date"):
-        selected_date = datetime.strptime(
-            request.GET.get("date"), "%Y-%m-%d"
-        ).date()
+        selected_date = datetime.strptime(request.GET.get("date"), "%Y-%m-%d").date()
 
-    # Ensure 24 slots exist
     for hour in range(24):
         Slot.objects.get_or_create(
             sport=sport,
@@ -104,7 +98,7 @@ def toggle_slot_booking(request, slot_id):
     slot = get_object_or_404(Slot, id=slot_id)
     slot.is_booked = not slot.is_booked
     slot.save()
-    return JsonResponse({"status": "success", "booked": slot.is_booked})
+    return JsonResponse({"booked": slot.is_booked})
 
 
 # ================= PUBLIC =================
@@ -129,7 +123,10 @@ def slots_view(request, sport_id):
             time=time(hour, 0)
         )
 
-    slots = Slot.objects.filter(sport=sport, date=selected_date)
+    slots = Slot.objects.filter(
+        sport=sport,
+        date=selected_date
+    ).order_by("time")
 
     for slot in slots:
         slot.price = get_slot_price(slot)
@@ -140,7 +137,7 @@ def slots_view(request, sport_id):
         "selected_date": selected_date,
         "dates": [timezone.localdate() + timedelta(days=i) for i in range(7)],
         "today": timezone.localdate(),
-        "current_hour": timezone.localtime().hour
+        "current_hour": timezone.localtime().hour,
     })
 
 
@@ -148,9 +145,8 @@ def user_details(request):
     if request.method != "POST":
         return redirect("home")
 
-    slot_ids = request.POST.getlist("slots[]")
     return render(request, "booking/user_details.html", {
-        "slot_ids": slot_ids
+        "slot_ids": request.POST.getlist("slots[]")
     })
 
 
@@ -159,30 +155,27 @@ def payment_page(request):
         return redirect("home")
 
     slot_ids = request.POST.getlist("slots[]")
-    user_name = request.POST.get("user_name")
-    phone = request.POST.get("phone")
-
     slots = Slot.objects.filter(id__in=slot_ids).order_by("time")
+
     total = sum(get_slot_price(slot) for slot in slots)
 
     return render(request, "booking/payment.html", {
         "slots": slots,
         "total": total,
-        "user_name": user_name,
-        "phone": phone,
+        "user_name": request.POST.get("user_name"),
+        "phone": request.POST.get("phone"),
         "sport": slots.first().sport,
-        "date": slots.first().date
+        "date": slots.first().date,
     })
 
 
 # ================= BOOKING =================
 
 def generate_qr_base64(booking):
-    qr_data = f"{settings.SITE_URL}/verify/{booking.booking_id}/"
-    qr = qrcode.make(qr_data)
-    buffer = BytesIO()
-    qr.save(buffer, format="PNG")
-    return base64.b64encode(buffer.getvalue()).decode()
+    qr = qrcode.make(f"{settings.SITE_URL}/verify/{booking.booking_id}/")
+    buf = BytesIO()
+    qr.save(buf, format="PNG")
+    return base64.b64encode(buf.getvalue()).decode()
 
 
 @transaction.atomic
@@ -190,12 +183,8 @@ def confirm_booking(request):
     if request.method != "POST":
         return redirect("home")
 
-    slot_ids = request.POST.getlist("slots[]")
-    user_name = request.POST.get("user_name")
-    phone = request.POST.get("phone")
-
     slots = Slot.objects.select_for_update().filter(
-        id__in=slot_ids,
+        id__in=request.POST.getlist("slots[]"),
         is_booked=False
     ).order_by("time")
 
@@ -203,26 +192,17 @@ def confirm_booking(request):
         return redirect("home")
 
     booking = Booking.objects.create(
-        user_name=user_name,
-        phone=phone
+        user_name=request.POST.get("user_name"),
+        phone=request.POST.get("phone")
     )
 
     booking.slots.set(slots)
     slots.update(is_booked=True)
 
-    # add display labels (IMPORTANT)
-    for slot in slots:
-        start = datetime.combine(slot.date, slot.time)
-        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
-        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
-
-    qr_code = generate_qr_base64(booking)
-
     return render(request, "booking/success.html", {
         "booking": booking,
-        "qr_code": qr_code,
+        "qr_code": generate_qr_base64(booking),
     })
-
 
 
 # ================= VERIFY / PDF =================
@@ -239,11 +219,8 @@ def download_booking_pdf(request, booking_id):
     response["Content-Disposition"] = f'attachment; filename="booking_{booking.booking_id}.pdf"'
 
     p = canvas.Canvas(response, pagesize=A4)
-
-    qr_base64 = generate_qr_base64(booking)
-    qr_img = ImageReader(BytesIO(base64.b64decode(qr_base64)))
-    p.drawImage(qr_img, 100, 500, width=200, height=200)
-
+    qr_img = ImageReader(BytesIO(base64.b64decode(generate_qr_base64(booking))))
+    p.drawImage(qr_img, 100, 500, 200, 200)
     p.showPage()
     p.save()
     return response
@@ -258,7 +235,6 @@ def contact_page(request):
 
 
 def gallery(request):
-    images = GalleryImage.objects.filter(active=True)
     return render(request, "booking/gallery.html", {
-        "images": images
+        "images": GalleryImage.objects.filter(active=True)
     })

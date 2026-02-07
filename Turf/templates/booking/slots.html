@@ -25,10 +25,10 @@
 
   <!-- FILTERS -->
   <div class="slot-filters">
-    <button type="button" class="filter active" onclick="filterSlots('all', this)">All</button>
-    <button type="button" class="filter" onclick="filterSlots('morning', this)">Morning</button>
-    <button type="button" class="filter" onclick="filterSlots('afternoon', this)">Afternoon</button>
-    <button type="button" class="filter" onclick="filterSlots('evening', this)">Evening</button>
+    <button class="filter active" onclick="filterSlots('all', this)">All</button>
+    <button class="filter" onclick="filterSlots('morning', this)">Morning</button>
+    <button class="filter" onclick="filterSlots('afternoon', this)">Afternoon</button>
+    <button class="filter" onclick="filterSlots('evening', this)">Evening</button>
   </div>
 
   <!-- SLOT GRID -->
@@ -37,13 +37,13 @@
 
       {% if slot.is_booked %}
         <div class="slot booked" data-hour="{{ slot.time.hour }}">
-          <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
+          <h4>{{ slot.display_time }}</h4>
           <span>Booked</span>
         </div>
 
       {% elif selected_date == today and slot.time.hour < current_hour %}
-        <div class="slot booked" data-hour="{{ slot.time.hour }}">
-          <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
+        <div class="slot expired" data-hour="{{ slot.time.hour }}">
+          <h4>{{ slot.display_time }}</h4>
           <span>Expired</span>
         </div>
 
@@ -53,7 +53,7 @@
              data-id="{{ slot.id }}"
              data-price="{{ slot.price }}"
              onclick="toggleSelect(this)">
-          <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
+          <h4>{{ slot.display_time }}</h4>
           <span>₹{{ slot.price }}</span>
         </div>
       {% endif %}
@@ -78,9 +78,8 @@
 <script>
 let selectedSlots = new Map();
 
-// SLOT SELECT
 function toggleSelect(el) {
-  if (el.classList.contains("booked")) return;
+  if (el.classList.contains("booked") || el.classList.contains("expired")) return;
 
   const slotId = el.dataset.id;
   const price = parseInt(el.dataset.price);
@@ -92,20 +91,18 @@ function toggleSelect(el) {
     el.classList.add("selected");
     selectedSlots.set(slotId, price);
   }
-
   updateSummary();
 }
 
 function updateSummary() {
   let total = 0;
-  selectedSlots.forEach(p => total += p);
+  selectedSlots.forEach(v => total += v);
 
   document.getElementById("count").innerText = selectedSlots.size;
   document.getElementById("total").innerText = total;
   document.getElementById("proceedBtn").disabled = selectedSlots.size === 0;
 }
 
-// FILTER
 function filterSlots(type, btn) {
   document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
@@ -114,20 +111,17 @@ function filterSlots(type, btn) {
     const hour = parseInt(slot.dataset.hour);
     slot.style.display = "block";
 
-    if (type === "morning" && !(hour >= 0 && hour < 12)) slot.style.display = "none";
-    if (type === "afternoon" && !(hour >= 12 && hour < 17)) slot.style.display = "none";
-    if (type === "evening" && !(hour >= 17 && hour <= 23)) slot.style.display = "none";
+    if (type === "morning" && hour >= 12) slot.style.display = "none";
+    if (type === "afternoon" && (hour < 12 || hour >= 17)) slot.style.display = "none";
+    if (type === "evening" && hour < 17) slot.style.display = "none";
   });
 }
 
-// SUBMIT
 function submitBooking() {
   const form = document.getElementById("bookingForm");
+  form.querySelectorAll("input[name='slots[]']").forEach(i => i.remove());
 
-  // Remove old inputs
-  form.querySelectorAll("input[name='slots[]']").forEach(e => e.remove());
-
-  selectedSlots.forEach((price, id) => {
+  selectedSlots.forEach((_, id) => {
     const input = document.createElement("input");
     input.type = "hidden";
     input.name = "slots[]";
