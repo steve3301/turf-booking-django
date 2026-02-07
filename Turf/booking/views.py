@@ -187,20 +187,19 @@ def generate_qr_base64(booking):
 
 @transaction.atomic
 def confirm_booking(request):
+    if request.method != "POST":
+        return redirect("home")
+
     slot_ids = request.POST.getlist("slots[]")
     user_name = request.POST.get("user_name")
     phone = request.POST.get("phone")
 
-    if not slot_ids:
-        return redirect("home")
+    slots = Slot.objects.select_for_update().filter(
+        id__in=slot_ids,
+        is_booked=False
+    ).order_by("time")
 
-    slots = list(
-        Slot.objects.select_for_update()
-        .filter(id__in=slot_ids, is_booked=False)
-        .order_by("time")
-    )
-
-    if not slots:
+    if not slots.exists():
         return redirect("home")
 
     booking = Booking.objects.create(
@@ -209,14 +208,21 @@ def confirm_booking(request):
     )
 
     booking.slots.set(slots)
-    Slot.objects.filter(id__in=[s.id for s in slots]).update(is_booked=True)
+    slots.update(is_booked=True)
+
+    # add display labels (IMPORTANT)
+    for slot in slots:
+        start = datetime.combine(slot.date, slot.time)
+        slot.start_label = start.strftime("%I:%M %p").lstrip("0")
+        slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
 
     qr_code = generate_qr_base64(booking)
 
     return render(request, "booking/success.html", {
         "booking": booking,
-        "qr_code": qr_code
+        "qr_code": qr_code,
     })
+
 
 
 # ================= VERIFY / PDF =================

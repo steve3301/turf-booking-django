@@ -1,8 +1,5 @@
-# urls updated
 from django.urls import path
 from . import views
-from django.conf import settings
-from django.conf.urls.static import static
 
 urlpatterns = [
     # ---------- STAFF AUTH ----------
@@ -25,11 +22,7 @@ urlpatterns = [
     path("verify/<uuid:booking_id>/", views.verify_booking, name="verify_booking"),
     path("download/<uuid:booking_id>/", views.download_booking_pdf, name="download_booking_pdf"),
 
-    # ---------- EXTRA ----------
-    path("success/", views.success, name="success"),
+    # ---------- STATIC ----------
     path("gallery/", views.gallery, name="gallery"),
     path("contact/", views.contact_page, name="contact"),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
