@@ -157,14 +157,10 @@ def payment_page(request):
     slots = Slot.objects.filter(id__in=slot_ids).order_by("time")
 
     total = 0
-
     for slot in slots:
-        # Time labels
         start = datetime.combine(slot.date, slot.time)
         slot.start_label = start.strftime("%I:%M %p").lstrip("0")
         slot.end_label = (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0")
-
-        # 🔥 PRICE (THIS WAS MISSING EARLIER)
         slot.price = get_slot_price(slot)
         total += slot.price
 
@@ -176,8 +172,6 @@ def payment_page(request):
         "user_name": request.POST.get("user_name"),
         "phone": request.POST.get("phone"),
     })
-        
-
 
 
 # ================= BOOKING =================
@@ -189,12 +183,58 @@ def generate_qr_base64(booking):
     return base64.b64encode(buf.getvalue()).decode()
 
 
+@transaction.atomic
 def confirm_booking(request):
-    print("🔥 NEW CONFIRM_BOOKING CODE RUNNING")
+    if request.method != "POST":
+        return redirect("home")
 
+    slot_ids = request.POST.getlist("slots[]")
+    user_name = request.POST.get("user_name")
+    phone = request.POST.get("phone")
 
+    if not slot_ids or not user_name or not phone:
+        return redirect("home")
 
+    slots = Slot.objects.filter(
+        id__in=slot_ids,
+        is_booked=False
+    ).order_by("time")
 
+    if not slots.exists():
+        return redirect("home")
+
+    booking = Booking.objects.create(
+        user_name=user_name,
+        phone=phone
+    )
+
+    total_amount = 0
+    booked_slots = []
+
+    for slot in slots:
+        price = get_slot_price(slot)
+        total_amount += price
+
+        booking.slots.add(slot)
+
+        start = datetime.combine(slot.date, slot.time)
+        booked_slots.append({
+            "start": start.strftime("%I:%M %p").lstrip("0"),
+            "end": (start + timedelta(hours=1)).strftime("%I:%M %p").lstrip("0"),
+            "price": price,
+            "sport": slot.sport.name,
+            "date": slot.date,
+        })
+
+        slot.is_booked = True
+        slot.save()
+
+    return render(request, "booking/success.html", {
+        "booking": booking,
+        "booked_slots": booked_slots,
+        "total_amount": total_amount,
+        "qr_code": generate_qr_base64(booking),
+    })
 
 
 # ================= VERIFY / PDF =================
