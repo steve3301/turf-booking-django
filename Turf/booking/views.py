@@ -189,45 +189,9 @@ def generate_qr_base64(booking):
     return base64.b64encode(buf.getvalue()).decode()
 
 
-@transaction.atomic
 def confirm_booking(request):
-    if request.method != "POST":
-        return redirect("home")
+    print("🔥 NEW CONFIRM_BOOKING CODE RUNNING")
 
-    slot_ids = request.POST.getlist("slots[]")
-    user_name = request.POST.get("user_name")
-    phone = request.POST.get("phone")
-
-    slots = Slot.objects.select_for_update().filter(
-        id__in=slot_ids,
-        is_booked=False
-    ).order_by("time")
-
-    if not slots.exists():
-        return redirect("home")
-
-    total_amount = 0
-
-    booking = Booking.objects.create(
-        user_name=user_name,
-        phone=phone,
-        total_amount=0  # temp
-    )
-
-    for slot in slots:
-        price = get_slot_price(slot)
-        total_amount += price
-        booking.slots.add(slot)
-
-    booking.total_amount = total_amount  # ✅ STORE IT
-    booking.save()
-
-    slots.update(is_booked=True)
-
-    return render(request, "booking/success.html", {
-        "booking": booking,
-        "qr_code": generate_qr_base64(booking),
-    })
 
 
 
