@@ -2,13 +2,6 @@ from django.shortcuts import redirect
 from django.db import models
 from .models import SlotPricing
 
-def staff_required(view_func):
-    def wrapper(request, *args, **kwargs):
-        if request.user.is_authenticated and hasattr(request.user, "staffprofile"):
-            return view_func(request, *args, **kwargs)
-        return redirect("login")
-    return wrapper
-
 def get_slot_price(slot):
     pricing = SlotPricing.objects.filter(
         sport=slot.sport,
@@ -20,6 +13,9 @@ def get_slot_price(slot):
     ).order_by("-date").first()
 
     if pricing:
-        return pricing.final_price()
+        price = pricing.final_price()
+        if price > 0:
+            return price
 
+    # 🔥 ABSOLUTE FALLBACK (NEVER ZERO)
     return 1599
