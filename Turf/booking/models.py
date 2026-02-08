@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 import uuid
 from datetime import datetime, timedelta
 
-
 # ================= SPORT =================
 
 class Sport(models.Model):
@@ -12,9 +11,6 @@ class Sport(models.Model):
 
     def __str__(self):
         return self.name
-
-
-
 
 
 # ================= SLOT =================
@@ -41,32 +37,17 @@ class Slot(models.Model):
 # ================= BOOKING =================
 
 class Booking(models.Model):
-    booking_id = models.UUIDField(
-        default=uuid.uuid4,
-        editable=False,
-        unique=True
-    )
-
+    booking_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     user_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
 
     slots = models.ManyToManyField(Slot, related_name="bookings")
 
-    qr_path = models.CharField(max_length=255, blank=True)
+    total_amount = models.PositiveIntegerField(default=0)  # ✅ FIX
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.user_name} | {self.booking_id}"
-
-
-# ================= STAFF PROFILE =================
-
-class StaffProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    is_staff_member = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.user.username
 
 
 # ================= CONTACT =================
@@ -84,47 +65,15 @@ class Contact(models.Model):
 
 class SlotPricing(models.Model):
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
-
-    date = models.DateField(
-        null=True,
-        blank=True,
-        help_text="Leave empty to apply pricing every day until changed"
-    )
-
-    start_time = models.TimeField(
-        null=True,
-        blank=True,
-        help_text="Leave empty to start from beginning of day"
-    )
-
-    end_time = models.TimeField(
-        null=True,
-        blank=True,
-        help_text="Leave empty to apply until end of day"
-    )
-
-    price = models.PositiveIntegerField(help_text="Base price for this time range")
-    discount = models.PositiveIntegerField(
-        default=0,
-        help_text="Flat discount amount (₹)"
-    )
-
+    date = models.DateField(null=True, blank=True)
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+    price = models.PositiveIntegerField()
+    discount = models.PositiveIntegerField(default=0)
     active = models.BooleanField(default=True)
-
-    class Meta:
-        ordering = ["sport", "date", "start_time"]
 
     def final_price(self):
         return max(self.price - self.discount, 0)
 
-    def discount_percent(self):
-        if self.price > 0 and self.discount > 0:
-            return int((self.discount / self.price) * 100)
-        return 0
-
-    discount_percent.short_description = "Discount %"
-
     def __str__(self):
-        if self.date:
-            return f"{self.sport} | {self.date} | ₹{self.final_price()}"
-        return f"{self.sport} | Daily | ₹{self.final_price()}"
+        return f"{self.sport} | ₹{self.final_price()}"

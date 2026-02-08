@@ -1,15 +1,8 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import (
-    Sport,
-    Slot,
-    Booking,
-    Contact,
-    SlotPricing
-)
+from .models import Sport, Slot, Booking, SlotPricing, Contact
 
-# ================= SPORT =================
 
 @admin.register(Sport)
 class SportAdmin(admin.ModelAdmin):
@@ -27,16 +20,12 @@ class SportAdmin(admin.ModelAdmin):
     image_preview.short_description = "Image"
 
 
-# ================= SLOT =================
-
 @admin.register(Slot)
 class SlotAdmin(admin.ModelAdmin):
     list_display = ("sport", "date", "time", "is_booked")
     list_filter = ("sport", "date", "is_booked")
     ordering = ("date", "time")
 
-
-# ================= BOOKING =================
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
@@ -45,15 +34,11 @@ class BookingAdmin(admin.ModelAdmin):
     readonly_fields = ("booking_id", "created_at")
 
 
-# ================= CONTACT =================
-
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
     list_display = ("phone", "email")
     search_fields = ("phone", "email")
 
-
-# ================= SLOT PRICING =================
 
 @admin.register(SlotPricing)
 class SlotPricingAdmin(admin.ModelAdmin):
@@ -66,16 +51,5 @@ class SlotPricingAdmin(admin.ModelAdmin):
         "discount",
         "active",
     )
-
     list_filter = ("sport", "date", "active")
     search_fields = ("sport__name",)
-
-    actions = ("activate_pricing", "deactivate_pricing")
-
-    @admin.action(description="Activate selected pricing rules")
-    def activate_pricing(self, request, queryset):
-        queryset.update(active=True)
-
-    @admin.action(description="Deactivate selected pricing rules")
-    def deactivate_pricing(self, request, queryset):
-        queryset.update(active=False)

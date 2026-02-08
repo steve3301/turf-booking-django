@@ -10,9 +10,6 @@ def staff_required(view_func):
     return wrapper
 
 def get_slot_price(slot):
-    from .models import SlotPricing
-    from django.utils import timezone
-
     pricing = SlotPricing.objects.filter(
         sport=slot.sport,
         active=True
@@ -25,4 +22,4 @@ def get_slot_price(slot):
     if pricing:
         return pricing.final_price()
 
-    return 1599  # default fallback
+    return 1599
