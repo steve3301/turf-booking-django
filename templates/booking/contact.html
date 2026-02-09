@@ -1,0 +1,57 @@
+{% extends "booking/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<section class="contact-section">
+  
+  <div class="contact-header">
+    <h1>Contact <span>Us</span></h1>
+    <p>We are here to help you book your perfect game</p>
+  </div>
+
+  <div class="contact-grid">
+
+    <!-- LEFT CARD -->
+    <div class="contact-card">
+      <h2>Get in Touch</h2>
+
+      <div class="contact-item">
+        <span>📞</span>
+        <div>
+          <strong>Phone</strong>
+          <p>{{ contact.phone }}</p>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <span>📧</span>
+        <div>
+          <strong>Email</strong>
+          <p>{{ contact.email }}</p>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <span>📍</span>
+        <div>
+          <strong>Location</strong>
+          <p>{{ contact.address }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT CARD -->
+    <div class="contact-cta">
+      <h2>Book Your Slot Now</h2>
+      <p>Experience premium turf with instant availability.</p>
+
+      <a href="{% url 'home' %}#turfs" class="cta-btn">Explore Turfs</a>
+      <a href="{% url 'home' %}#turfs" class="cta-btn secondary">Book Slot</a>
+    </div>
+
+  </div>
+
+</section>
+
+{% endblock %}

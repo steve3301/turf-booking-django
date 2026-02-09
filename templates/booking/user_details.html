@@ -1,0 +1,36 @@
+{% extends "booking/base.html" %}
+{% block content %}
+
+<div style="max-width:500px;margin:80px auto;padding:30px;
+background:#020617;border-radius:20px;border:1px solid #1f2937">
+
+  <h2 style="margin-bottom:20px;color:#4ade80;">
+    Enter Booking Details
+  </h2>
+
+  <form method="POST" action="{% url 'payment' %}">
+    {% csrf_token %}
+
+    <!-- Hidden slots -->
+    {% for slot_id in slot_ids %}
+      <input type="hidden" name="slots[]" value="{{ slot_id }}">
+    {% endfor %}
+
+    <label>Name</label>
+    <input type="text" name="user_name" required
+      style="width:100%;padding:14px;margin-bottom:15px;border-radius:12px">
+
+    <label>Phone Number</label>
+    <input type="tel" name="phone" pattern="[0-9]{10}" required
+      style="width:100%;padding:14px;margin-bottom:25px;border-radius:12px">
+
+    <button style="width:100%;padding:16px;
+      background:linear-gradient(135deg,#22c55e,#4ade80);
+      border:none;border-radius:16px;font-weight:bold">
+      Continue to Payment
+    </button>
+  </form>
+
+</div>
+
+{% endblock %}

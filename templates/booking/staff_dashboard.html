@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Staff Dashboard</title>
+  <link rel="stylesheet" href="{% static 'booking/css/staff_dashboard.css' %}">
+</head>
+<body>
+
+<header class="topbar">
+  <h1>Staff Dashboard</h1>
+  <a href="{% url 'staff_logout' %}" class="logout">Logout</a>
+</header>
+
+<div class="container">
+  <h2 class="section-title">Select Sport</h2>
+
+<div class="sports-grid">
+  {% for sport in sports %}
+    <a href="{% url 'staff_slots' sport.id %}" class="sport-card">
+      <div class="sport-icon">
+        {% if sport.name == "Cricket" %}
+          🏏
+        {% elif sport.name == "Football" %}
+          ⚽
+        {% else %}
+          🏟️
+        {% endif %}
+      </div>
+      <div class="sport-name">{{ sport.name }}</div>
+      <div class="sport-action">Manage Slots →</div>
+    </a>
+  {% endfor %}
+</div>
