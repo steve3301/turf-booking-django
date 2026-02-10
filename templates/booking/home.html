@@ -2,15 +2,9 @@
 {% load static %}
 {% block content %}
 
-<!-- ================= HERO ================= -->
-<section class="hero-video">
-  <video autoplay muted loop playsinline class="hero-bg-video">
-    <source src="{% static 'booking/videos/turf_video.mp4' %}" type="video/mp4">
-  </video>
-
-  <div class="hero-overlay"></div>
-
-  <div class="hero-content">
+<!-- ================= HERO (IMAGE, NOT VIDEO) ================= -->
+<section class="hero-static">
+  <div class="hero-container">
     <h1>
       Book Your Game<br>
       With Confidence
@@ -30,41 +24,43 @@
 
 <!-- ================= TRUST ================= -->
 <section class="trust-strip">
-  <div class="trust-grid">
-    <div>✔ Professionally Maintained</div>
-    <div>✔ Real-Time Availability</div>
-    <div>✔ Secure Online Booking</div>
-    <div>✔ Trusted by Local Teams</div>
+  <div class="container trust-grid">
+    <div>Professionally Maintained</div>
+    <div>Real-Time Availability</div>
+    <div>Secure Online Booking</div>
+    <div>Trusted by Local Teams</div>
   </div>
 </section>
 
 <!-- ================= TURFS ================= -->
 <section class="turfs" id="turfs">
-  <h2>Available Turfs</h2>
+  <div class="container">
+    <h2>Available Turfs</h2>
 
-  <div class="cards">
-    {% for sport in sports %}
-    <div class="card">
-      {% if sport.image %}
-        <img src="{{ sport.image.url }}" alt="{{ sport.name }}">
-      {% else %}
-        <img src="{% static 'booking/images/turf1.jpg' %}" alt="Turf">
-      {% endif %}
+    <div class="cards">
+      {% for sport in sports %}
+      <div class="card">
+        {% if sport.image %}
+          <img src="{{ sport.image.url }}" alt="{{ sport.name }}">
+        {% else %}
+          <img src="{% static 'booking/images/turf1.jpg' %}" alt="Turf">
+        {% endif %}
 
-      <div class="card-body">
-        <h3>{{ sport.name }}</h3>
-        <p>International standard • Night lighting</p>
-        <a href="{% url 'slots' sport.id %}" class="card-btn">View Slots →</a>
+        <div class="card-body">
+          <h3>{{ sport.name }}</h3>
+          <p>International standard • Night lighting</p>
+          <a href="{% url 'slots' sport.id %}" class="card-btn">View Slots →</a>
+        </div>
       </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </div>
 </section>
 
-<!-- ================= STORY VIDEO ================= -->
+<!-- ================= SINGLE CINEMATIC VIDEO ================= -->
 <section class="cinematic-section">
   <div class="cinematic-wrapper">
-    <video autoplay muted loop playsinline class="cinematic-video">
+    <video muted autoplay loop playsinline class="cinematic-video">
       <source src="{% static 'booking/videos/turf_video.mp4' %}" type="video/mp4">
     </video>
 
@@ -73,7 +69,8 @@
     <div class="cinematic-content">
       <h2>Built for Serious Play</h2>
       <p>
-        Designed for performance, safety, and consistency — trusted by real players.
+        Designed for performance, safety, and consistency.<br>
+        Trusted by players who value quality.
       </p>
     </div>
   </div>
