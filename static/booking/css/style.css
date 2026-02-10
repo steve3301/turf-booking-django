@@ -1,5 +1,6 @@
-/* ================= GLOBAL ================= */
-
+/* =====================================================
+   GLOBAL RESET
+===================================================== */
 * {
   margin: 0;
   padding: 0;
@@ -7,20 +8,22 @@
 }
 
 body {
-  font-family: "Poppins", sans-serif;
-  background: radial-gradient(circle at top, #0b1220, #020617);
-  color: #e5e7eb;
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  color: white;
 }
 
-/* ================= NAVBAR ================= */
-
+/* =====================================================
+   NAVBAR
+===================================================== */
 .navbar {
   position: sticky;
   top: 0;
-  z-index: 1000;
-  background: rgba(2, 6, 23, 0.92);
+  z-index: 999;
+  background: rgba(2,6,23,0.88);
   backdrop-filter: blur(18px);
   border-bottom: 1px solid #1f2937;
+  padding: 14px 0;
 }
 
 .nav-container {
@@ -29,7 +32,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 0;
 }
 
 .brand {
@@ -39,13 +41,17 @@ body {
 }
 
 .logo {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+  height: 46px;
+  width: 46px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #0f172a;
+  padding: 6px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.6);
 }
 
 .brand-text {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 900;
   background: linear-gradient(135deg, #22c55e, #4ade80);
   -webkit-background-clip: text;
@@ -53,9 +59,10 @@ body {
 }
 
 .nav-links a {
-  color: #9ca3af;
+  margin: 0 16px;
+  color: #94a3b8;
   text-decoration: none;
-  margin: 0 14px;
+  font-weight: 500;
 }
 
 .nav-links a:hover {
@@ -64,188 +71,216 @@ body {
 
 .nav-btn {
   background: linear-gradient(135deg, #22c55e, #4ade80);
-  color: #020617;
-  padding: 10px 26px;
+  padding: 10px 24px;
   border-radius: 999px;
-  font-weight: 700;
+  color: black;
+  font-weight: bold;
   text-decoration: none;
 }
 
-/* ================= SLOTS PAGE ================= */
-
-.slots-wrapper {
-  max-width: 1200px;
-  margin: auto;
-  padding: 60px 6% 140px;
+/* =====================================================
+   HERO
+===================================================== */
+.hero-static {
+  min-height: 85vh;
+  background:
+    linear-gradient(
+      to right,
+      rgba(2,6,23,0.95),
+      rgba(2,6,23,0.8),
+      rgba(2,6,23,0.5)
+    ),
+    url("/static/booking/images/turf.jpg") center / cover no-repeat;
+  display: flex;
+  align-items: center;
 }
 
-.slots-top h1 {
-  font-size: 40px;
+.hero-container {
+  max-width: 620px;
+  padding-left: 8%;
+}
+
+.hero-static h1 {
+  font-size: 60px;
   font-weight: 900;
 }
 
-.slots-top p {
-  color: #9ca3af;
-  margin-top: 6px;
+.hero-static p {
+  margin: 20px 0 32px;
+  color: #cbd5e1;
+  font-size: 18px;
 }
 
-/* DATE STRIP */
-
-.date-strip {
-  display: flex;
-  gap: 14px;
-  margin: 30px 0;
-  flex-wrap: wrap;
-}
-
-.date-box {
-  background: #020617;
-  border: 1px solid #1f2937;
-  border-radius: 14px;
-  padding: 10px 14px;
-  text-align: center;
-  text-decoration: none;
-  color: #e5e7eb;
-  min-width: 70px;
-}
-
-.date-box.active {
-  background: linear-gradient(135deg, #22c55e, #4ade80);
-  color: #020617;
-  font-weight: 700;
-  border: none;
-}
-
-/* FILTERS */
-
-.slot-filters {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 30px;
-}
-
-.filter {
-  padding: 10px 22px;
+.hero-buttons a {
+  display: inline-block;
+  padding: 14px 32px;
   border-radius: 999px;
-  border: 1px solid #1f2937;
-  background: #020617;
-  color: #9ca3af;
-  cursor: pointer;
-}
-
-.filter.active {
-  background: linear-gradient(135deg, #22c55e, #4ade80);
-  color: #020617;
-  border: none;
-}
-
-/* ================= SLOT GRID ================= */
-
-.slots-grid.premium-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px;
-}
-
-/* SLOT CARD */
-
-.slot {
-  background: linear-gradient(145deg, #020617, #0f172a);
-  border-radius: 18px;
-  padding: 22px 14px;
-  border: 1px solid #1f2937;
-  text-align: center;
-  transition: 0.25s ease;
-}
-
-.slot h4 {
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
-.price {
+  text-decoration: none;
   font-weight: 700;
+  margin-right: 14px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+  color: black;
+}
+
+.btn-secondary {
+  border: 2px solid #22c55e;
   color: #22c55e;
 }
 
-/* STATES */
-
-.slot.available:hover {
-  transform: translateY(-6px);
-  border-color: #22c55e;
-  cursor: pointer;
+/* =====================================================
+   TRUST STRIP
+===================================================== */
+.trust-strip {
+  background: #0b0c0e;
+  border-top: 1px solid #1f2937;
+  border-bottom: 1px solid #1f2937;
+  padding: 24px 0;
 }
 
-.slot.booked {
-  opacity: 0.35;
-  border-color: #ef4444;
+.trust-grid {
+  width: 80%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 20px;
+  text-align: center;
+  font-size: 13px;
+  color: #cbd5e1;
 }
 
-.slot.booked span {
-  color: #ef4444;
+/* =====================================================
+   TURFS
+===================================================== */
+.turfs {
+  padding: 80px 8%;
 }
 
-.slot.expired {
-  opacity: 0.35;
+.turfs h2 {
+  font-size: 44px;
+  margin-bottom: 40px;
 }
 
-.slot.expired span {
-  color: #94a3b8;
-}
-
-/* MOBILE */
-
-@media (max-width: 768px) {
-  .slots-grid.premium-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.slot.available.selected {
-  background: linear-gradient(135deg, #22c55e, #4ade80);
-  color: #020617;
-  border-color: #22c55e;
-}
-
-.slot.available.selected .price {
-  color: #020617;
-}
-
-.slot.expired {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-/* === SAFETY GRID FIX === */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+  gap: 35px;
+}
+
+.card {
+  background: #020617;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid #1f2937;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px);
 }
 
 .card img {
   width: 100%;
+  height: 210px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 22px;
+}
+
+.card-body h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.card-body p {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.card-btn {
   display: block;
-  border-radius: 18px 18px 0 0;
-}
-/* SLOT SELECTION FEEDBACK */
-.slot.available.selected {
-  background: #22c55e;
-  color: #020617;
-  border-color: #22c55e;
-}
-
-.slot.available.selected span {
-  color: #020617;
+  margin-top: 18px;
+  padding: 12px;
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+  border-radius: 14px;
+  text-align: center;
+  font-weight: bold;
+  text-decoration: none;
+  color: black;
 }
 
-/* CENTER GRID */
-.slots-wrapper {
-  max-width: 1200px;
-  margin: auto;
+/* =====================================================
+   CINEMATIC VIDEO
+===================================================== */
+.cinematic-wrapper {
+  position: relative;
+  height: 65vh;
 }
 
-/* BOOKING BAR */
-.booking-bar {
-  box-shadow: 0 -10px 30px rgba(0,0,0,0.6);
+.cinematic-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.55);
+}
+
+.cinematic-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+}
+
+.cinematic-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.cinematic-content h2 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.cinematic-content p {
+  color: #cbd5e1;
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+.footer {
+  background: black;
+  text-align: center;
+  padding: 22px;
+  color: #64748b;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+@media (max-width: 768px) {
+  .hero-static h1 {
+    font-size: 34px;
+  }
+
+  .hero-container {
+    padding-left: 5%;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
 }
