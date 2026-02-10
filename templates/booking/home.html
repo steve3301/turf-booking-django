@@ -1,11 +1,9 @@
 {% extends "booking/base.html" %}
 {% load static %}
-
 {% block content %}
 
-<!-- ================= CINEMATIC HERO ================= -->
+<!-- ================= HERO ================= -->
 <section class="hero-video">
-
   <video autoplay muted loop playsinline class="hero-bg-video">
     <source src="{% static 'booking/videos/turf_video.mp4' %}" type="video/mp4">
   </video>
@@ -14,13 +12,13 @@
 
   <div class="hero-content">
     <h1>
-      Book Your <span>Game</span><br>
+      Book Your Game<br>
       With Confidence
     </h1>
 
     <p>
       Professionally managed football & cricket turfs.<br>
-      Transparent pricing • Real-time availability • Trusted bookings
+      Transparent pricing • Real-time availability
     </p>
 
     <div class="hero-buttons">
@@ -28,26 +26,13 @@
       <a href="#turfs" class="btn-secondary">Book a Slot</a>
     </div>
   </div>
-
 </section>
 
-<!-- ================= TRUST STRIP ================= -->
-<section style="
-  background:#0b0c0e;
-  border-top:1px solid #1f2937;
-  border-bottom:1px solid #1f2937;
-  padding:30px 8%;
-">
-  <div style="
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:25px;
-    text-align:center;
-    color:#cbd5e1;
-    font-size:14px;
-  ">
-    <div>✔ Professionally Maintained Turfs</div>
-    <div>✔ Real-Time Slot Availability</div>
+<!-- ================= TRUST ================= -->
+<section class="trust-strip">
+  <div class="trust-grid">
+    <div>✔ Professionally Maintained</div>
+    <div>✔ Real-Time Availability</div>
     <div>✔ Secure Online Booking</div>
     <div>✔ Trusted by Local Teams</div>
   </div>
@@ -60,7 +45,6 @@
   <div class="cards">
     {% for sport in sports %}
     <div class="card">
-
       {% if sport.image %}
         <img src="{{ sport.image.url }}" alt="{{ sport.name }}">
       {% else %}
@@ -69,26 +53,16 @@
 
       <div class="card-body">
         <h3>{{ sport.name }}</h3>
-        <p>
-          International-standard surface<br>
-          Night lighting • Daily maintenance
-        </p>
-
-        <a href="{% url 'slots' sport.id %}" class="card-btn">
-          View Slots →
-        </a>
+        <p>International standard • Night lighting</p>
+        <a href="{% url 'slots' sport.id %}" class="card-btn">View Slots →</a>
       </div>
-
     </div>
-    {% empty %}
-      <p style="color:#94a3b8;">No turfs available at the moment.</p>
     {% endfor %}
   </div>
 </section>
 
-<!-- ================= CINEMATIC STORY VIDEO ================= -->
+<!-- ================= STORY VIDEO ================= -->
 <section class="cinematic-section">
-
   <div class="cinematic-wrapper">
     <video autoplay muted loop playsinline class="cinematic-video">
       <source src="{% static 'booking/videos/turf_video.mp4' %}" type="video/mp4">
@@ -99,12 +73,10 @@
     <div class="cinematic-content">
       <h2>Built for Serious Play</h2>
       <p>
-        Designed for performance, safety, and consistency —  
-        our turfs are trusted by players who value quality.
+        Designed for performance, safety, and consistency — trusted by real players.
       </p>
     </div>
   </div>
-
 </section>
 
 {% endblock %}

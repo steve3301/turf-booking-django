@@ -7,7 +7,7 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  background: radial-gradient(circle at top, #111111, #000000);
+  background: #000000;
   color: #ffffff;
 }
 
@@ -16,7 +16,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0,0,0,0.88);
   backdrop-filter: blur(18px);
   border-bottom: 1px solid #1f1f1f;
   padding: 16px 0;
@@ -45,11 +45,6 @@ body {
   padding: 6px;
   background: #000;
   border: 1px solid #2a2a2a;
-  transition: transform 0.25s ease;
-}
-
-.brand:hover .logo {
-  transform: scale(1.05);
 }
 
 .brand-text {
@@ -79,29 +74,23 @@ body {
   text-decoration: none;
 }
 
-.nav-btn:hover {
-  background: #e5e5e5;
-}
-
-/* ================= CINEMATIC HERO ================= */
+/* ================= HERO ================= */
 .hero-video {
   position: relative;
-  height: 90vh;
-  overflow: hidden;
+  height: 75vh;
   display: flex;
   align-items: center;
   padding: 0 8%;
+  background: #000;
 }
 
 .hero-bg-video {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  filter: brightness(0.5) contrast(1.05);
+  filter: brightness(0.45) contrast(1.05);
   z-index: -2;
 }
 
@@ -110,15 +99,15 @@ body {
   inset: 0;
   background: linear-gradient(
     to right,
-    rgba(0,0,0,0.92),
+    rgba(0,0,0,0.95),
     rgba(0,0,0,0.65),
-    rgba(0,0,0,0.4)
+    rgba(0,0,0,0.35)
   );
   z-index: -1;
 }
 
 .hero-content {
-  max-width: 650px;
+  max-width: 640px;
 }
 
 .hero-content h1 {
@@ -128,7 +117,7 @@ body {
 }
 
 .hero-content span {
-  color: #e5e5e5;
+  color: #ffffff;
 }
 
 .hero-content p {
@@ -156,9 +145,26 @@ body {
   color: #ffffff;
 }
 
+/* ================= TRUST STRIP ================= */
+.trust-strip {
+  background: #0b0c0e;
+  border-top: 1px solid #1f1f1f;
+  border-bottom: 1px solid #1f1f1f;
+  padding: 30px 8%;
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+  gap: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: #cfcfcf;
+}
+
 /* ================= TURFS ================= */
 .turfs {
-  padding: 80px 8%;
+  padding: 90px 8%;
   background: #000000;
 }
 
@@ -169,7 +175,7 @@ body {
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
   gap: 32px;
 }
 
@@ -178,12 +184,12 @@ body {
   border-radius: 22px;
   overflow: hidden;
   border: 1px solid #1f1f1f;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform .3s ease, box-shadow .3s ease;
 }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+  box-shadow: 0 25px 50px rgba(0,0,0,.85);
 }
 
 .card img {
@@ -214,82 +220,19 @@ body {
   padding: 12px;
   border-radius: 14px;
   font-weight: bold;
-  color: #000000;
+  color: #000;
   text-decoration: none;
 }
 
-/* ================= GALLERY ================= */
-.gallery-container {
-  padding: 80px 8%;
-  background: #000000;
-}
-
-.gallery-title {
-  font-size: 48px;
-  margin-bottom: 10px;
-}
-
-.gallery-subtitle {
-  color: #9a9a9a;
-  margin-bottom: 40px;
-}
-
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 28px;
-}
-
-.gallery-card {
-  border-radius: 22px;
-  overflow: hidden;
-  cursor: pointer;
-  background: #050505;
-  border: 1px solid #1f1f1f;
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
-}
-
-.gallery-card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 30px 70px rgba(0,0,0,0.85);
-}
-
-.gallery-card img {
-  width: 100%;
-  height: 230px;
-  object-fit: cover;
-}
-
-.gallery-card.tall img { height: 320px; }
-.gallery-card.wide img { height: 180px; }
-
-/* ================= MODAL ================= */
-.image-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.9);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.image-modal img {
-  max-width: 90%;
-  max-height: 85%;
-  border-radius: 26px;
-}
-
-/* ================= CINEMATIC VIDEO SECTION ================= */
+/* ================= CINEMATIC SECTION ================= */
 .cinematic-section {
-  padding: 80px 0;
-  background: #000000;
+  background: #000;
+  padding: 90px 0;
 }
 
 .cinematic-wrapper {
   position: relative;
-  width: 100%;
-  height: 75vh;
+  height: 70vh;
   overflow: hidden;
 }
 
@@ -297,7 +240,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(0.25) contrast(1.1) brightness(0.55);
+  filter: brightness(.55) contrast(1.1);
 }
 
 .cinematic-overlay {
@@ -305,9 +248,9 @@ body {
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(0,0,0,0.95),
-    rgba(0,0,0,0.5),
-    rgba(0,0,0,0.15)
+    rgba(0,0,0,.95),
+    rgba(0,0,0,.55),
+    rgba(0,0,0,.15)
   );
 }
 
@@ -321,43 +264,30 @@ body {
 .cinematic-content h2 {
   font-size: 42px;
   font-weight: 800;
-  margin-bottom: 14px;
 }
 
 .cinematic-content p {
-  font-size: 16px;
+  margin-top: 14px;
   color: #bdbdbd;
-  line-height: 1.6;
 }
 
 /* ================= FOOTER ================= */
 .footer {
-  background: #000000;
+  background: #000;
   border-top: 1px solid #1f1f1f;
   text-align: center;
   padding: 28px;
   color: #7a7a7a;
 }
 
-/* ================= RESPONSIVE ================= */
+/* ================= MOBILE ================= */
 @media (max-width: 768px) {
-  .hero-content h1 { font-size: 34px; }
   .nav-links { display: none; }
-  .cards { grid-template-columns: 1fr; }
-
-  .cinematic-wrapper { height: 50vh; }
+  .hero-content h1 { font-size: 34px; }
+  .cinematic-wrapper { height: 45vh; }
   .cinematic-content {
     left: 6%;
     right: 6%;
-    bottom: 30px;
     text-align: center;
   }
-  .cinematic-content h2 { font-size: 26px; }
-}
-
-@media (max-width: 480px) {
-  .hero-content h1 { font-size: 26px; }
-  .cinematic-wrapper { height: 45vh; }
-  .cinematic-content h2 { font-size: 22px; }
-  .cinematic-content p { font-size: 13px; }
 }
