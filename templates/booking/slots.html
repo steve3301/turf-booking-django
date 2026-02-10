@@ -2,64 +2,53 @@
 {% load static %}
 {% block content %}
 
-<div class="slots-wrapper">
+<div class="container" style="padding:80px 0">
 
-  <div class="slots-top">
-    <h1>{{ sport.name }}</h1>
-    <p>Choose your time. Lock your game.</p>
-  </div>
+  <h1 style="margin-bottom:10px">{{ sport.name }}</h1>
+  <p style="color:#94a3b8;margin-bottom:30px">Choose your time. Lock your game.</p>
 
-  <!-- DATE STRIP -->
-  <div class="date-strip">
+  <div class="date-strip" style="display:flex;gap:12px;margin-bottom:40px;overflow-x:auto">
     {% for d in dates %}
       <a href="?date={{ d|date:'Y-m-d' }}"
-         class="date-box {% if d == selected_date %}active{% endif %}">
-        <small>{{ d|date:"D" }}</small>
-        <span>{{ d|date:"d" }}</span>
+         class="date-box {% if d == selected_date %}active{% endif %}"
+         style="padding:14px 18px;border-radius:14px;border:1px solid #1f2937;text-decoration:none;color:white">
+        <small>{{ d|date:"D" }}</small><br>
+        <strong>{{ d|date:"d" }}</strong>
       </a>
     {% endfor %}
   </div>
 
-  <!-- SLOT GRID -->
-  <div class="slots-grid">
-
+  <div class="cards">
     {% for slot in slots %}
+
       {% if slot.is_booked %}
-        <div class="slot booked">
-          <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
-          <span>Booked</span>
+        <div class="card">
+          <div class="card-body">
+            <h3>{{ slot.start_label }} – {{ slot.end_label }}</h3>
+            <p>Booked</p>
+          </div>
         </div>
 
       {% elif slot.time.hour < current_hour and selected_date == today %}
-        <div class="slot expired">
-          <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
-          <span>Expired</span>
+        <div class="card">
+          <div class="card-body">
+            <h3>{{ slot.start_label }} – {{ slot.end_label }}</h3>
+            <p>Expired</p>
+          </div>
         </div>
 
       {% else %}
-        <div class="slot available"
-             data-id="{{ slot.id }}"
-             data-price="{{ slot.price }}">
-          <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
-          <span>₹{{ slot.price }}</span>
+        <div class="card">
+          <div class="card-body">
+            <h3>{{ slot.start_label }} – {{ slot.end_label }}</h3>
+            <p>₹{{ slot.price }}</p>
+          </div>
         </div>
       {% endif %}
+
     {% endfor %}
-
   </div>
+
 </div>
-
-<!-- BOOKING BAR -->
-<div class="booking-bar" id="bookingBar" style="display:none;">
-  <span id="bookingText">0 slot selected</span>
-
-  <form method="POST" action="{% url 'user_details' %}" id="bookingForm">
-    {% csrf_token %}
-    <div id="selectedSlotsContainer"></div>
-    <button type="submit">Proceed to Payment</button>
-  </form>
-</div>
-
-<script src="{% static 'booking/js/slots.js' %}"></script>
 
 {% endblock %}

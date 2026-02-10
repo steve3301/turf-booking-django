@@ -6,17 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DUGOUT | Premium Turf Booking</title>
 
-  <link rel="stylesheet" href="{% static 'booking/css/style.css' %}">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800;900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'booking/css/style.css' %}?v=4">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- ================= NAVBAR ================= -->
 <nav class="navbar">
   <div class="nav-container">
-
     <a href="{% url 'home' %}" class="brand">
-      <img src="{% static 'booking/images/logo.jpg' %}" alt="DUGOUT Logo" class="logo">
+      <img src="{% static 'booking/images/logo.jpg' %}" class="logo">
       <span class="brand-text">DUGOUT</span>
     </a>
 
@@ -31,13 +29,10 @@
   </div>
 </nav>
 
-<!-- ================= CONTENT ================= -->
 {% block content %}{% endblock %}
 
-<!-- ================= FOOTER ================= -->
 <footer class="footer">
   <p>© 2026 DUGOUT. All Rights Reserved.</p>
-  <small>Premium Sports Infrastructure & Booking Platform</small>
 </footer>
 
 </body>
