@@ -3,45 +3,59 @@
 
 {% block content %}
 
-<!-- ================= HERO ================= -->
-<section class="hero" style="height:80vh;">
-    <div class="hero-content">
-        <h1>Book Your <span>Game</span><br>Dominate the Field</h1>
-        <p>Premium turf • Instant booking • Live availability</p>
+<!-- ================= CINEMATIC HERO ================= -->
+<section class="hero-video">
 
-        <div class="hero-buttons">
-            <a href="#turfs" class="btn-primary">Explore Turfs</a>
-            <a href="#turfs" class="btn-secondary">Book Slot</a>
-        </div>
+  <video autoplay muted loop playsinline class="hero-bg-video">
+    <source src="{% static 'booking/videos/turf_video.mp4' %}" type="video/mp4">
+  </video>
+
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <h1>
+      Book Your <span>Game</span><br>
+      With Confidence
+    </h1>
+
+    <p>
+      Professionally managed football & cricket turfs.<br>
+      Transparent pricing • Real-time slots • Trusted bookings
+    </p>
+
+    <div class="hero-buttons">
+      <a href="#turfs" class="btn-primary">Explore Turfs</a>
+      <a href="#turfs" class="btn-secondary">Book a Slot</a>
     </div>
+  </div>
+
 </section>
 
 <!-- ================= TURFS ================= -->
 <section class="turfs" id="turfs">
-    <h2>Available Turfs</h2>
+  <h2>Available Turfs</h2>
 
-    <div class="cards">
-        {% for sport in sports %}
-        <div class="card">
+  <div class="cards">
+    {% for sport in sports %}
+    <div class="card">
 
-            {% if sport.image %}
-                <img src="{{ sport.image.url }}" alt="{{ sport.name }}">
-            {% else %}
-                <img src="{% static 'booking/images/turf1.jpg' %}" alt="Turf">
-            {% endif %}
+      {% if sport.image %}
+        <img src="{{ sport.image.url }}" alt="{{ sport.name }}">
+      {% else %}
+        <img src="{% static 'booking/images/turf1.jpg' %}" alt="Turf">
+      {% endif %}
 
-            <div class="card-body">
-                <h3>{{ sport.name }}</h3>
-                <p>Professional quality turf with lighting</p>
-                <a href="{% url 'slots' sport.id %}" class="card-btn">
-                    View Slots →
-                </a>
-            </div>
-        </div>
-        {% empty %}
-            <p>No turfs added yet</p>
-        {% endfor %}
+      <div class="card-body">
+        <h3>{{ sport.name }}</h3>
+        <p>Professional surface • Night lighting • Maintained daily</p>
+        <a href="{% url 'slots' sport.id %}" class="card-btn">
+          View Slots →
+        </a>
+      </div>
+
     </div>
+    {% endfor %}
+  </div>
 </section>
 
 {% endblock %}
