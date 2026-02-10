@@ -903,3 +903,148 @@
     opacity: 1;
   }
 }
+
+/* ================= GALLERY ================= */
+
+.gallery-container {
+  padding: 80px 8%;
+}
+
+.gallery-title {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.gallery-subtitle {
+  color: #94a3b8;
+  margin-bottom: 40px;
+}
+
+/* GRID */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
+}
+
+/* CARD */
+.gallery-card {
+  border-radius: 22px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.55);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.gallery-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.75);
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  display: block;
+}
+
+/* SHAPES */
+.gallery-card.tall img {
+  height: 320px;
+}
+
+.gallery-card.wide img {
+  height: 180px;
+}
+
+/* MODAL */
+.image-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(8px);
+}
+
+.image-modal img {
+  max-width: 90%;
+  max-height: 85%;
+  border-radius: 26px;
+  box-shadow: 0 40px 120px rgba(0,0,0,0.9);
+  animation: zoomIn 0.35s ease;
+}
+
+/* ANIMATION */
+@keyframes zoomIn {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .gallery-card img {
+    height: 220px;
+  }
+}
+
+/* =====================================================
+   PREMIUM TRUST OPTIMIZATION (SAFE APPEND)
+   Does NOT break existing UI
+===================================================== */
+
+/* Reduce fake gaming glow */
+.logo {
+  box-shadow: 0 0 6px rgba(0,0,0,0.6) !important;
+}
+
+/* Calm navbar like Ferrari */
+.navbar {
+  background: rgba(2,6,23,0.88) !important;
+  backdrop-filter: blur(20px);
+}
+
+/* Hero looks cinematic, not gaming */
+.hero,
+.hero-video {
+  filter: saturate(0.85);
+}
+
+/* Buttons less neon, more premium */
+.btn-primary,
+.nav-btn,
+.card-btn {
+  box-shadow: none !important;
+}
+
+/* Cards more professional */
+.card,
+.gallery-card {
+  background: #020617;
+  border: 1px solid #1f2937;
+}
+
+/* Typography trust */
+.hero-content h1 {
+  letter-spacing: -0.5px;
+}
+
+/* Gallery images premium feel */
+.gallery-card img {
+  filter: contrast(1.05);
+}
+
+/* Smooth everything */
+* {
+  transition: background-color 0.25s ease,
+              color 0.25s ease,
+              transform 0.25s ease;
+}
