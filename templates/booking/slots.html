@@ -1,11 +1,9 @@
 {% extends "booking/base.html" %}
 {% load static %}
-
 {% block content %}
 
 <div class="slots-wrapper">
 
-  <!-- TOP HEADER -->
   <div class="slots-top">
     <h1>{{ sport.name }}</h1>
     <p>Choose your time. Lock your game.</p>
@@ -22,42 +20,46 @@
     {% endfor %}
   </div>
 
-  <!-- FILTERS -->
-  <div class="slot-filters">
-    <button class="filter active">All</button>
-    <button class="filter">Morning</button>
-    <button class="filter">Afternoon</button>
-    <button class="filter">Evening</button>
-  </div>
-
-  <!-- SLOT GRID (🔥 FIXED) -->
-  <div class="slots-grid premium-grid">
+  <!-- SLOT GRID -->
+  <div class="slots-grid">
 
     {% for slot in slots %}
-
       {% if slot.is_booked %}
         <div class="slot booked">
           <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
-          <span class="status booked">Booked</span>
+          <span>Booked</span>
         </div>
 
       {% elif slot.time.hour < current_hour and selected_date == today %}
         <div class="slot expired">
           <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
-          <span class="status expired">Expired</span>
+          <span>Expired</span>
         </div>
 
       {% else %}
-        <div class="slot available" data-id="{{ slot.id }}">
+        <div class="slot available"
+             data-id="{{ slot.id }}"
+             data-price="{{ slot.price }}">
           <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
-          <span class="price">₹{{ slot.price }}</span>
+          <span>₹{{ slot.price }}</span>
         </div>
       {% endif %}
-
     {% endfor %}
 
   </div>
-
 </div>
+
+<!-- BOOKING BAR -->
+<div class="booking-bar" id="bookingBar" style="display:none;">
+  <span id="bookingText">0 slot selected</span>
+
+  <form method="POST" action="{% url 'user_details' %}">
+    {% csrf_token %}
+    <input type="hidden" name="slots[]" id="selectedSlots">
+    <button type="submit">Proceed to Payment</button>
+  </form>
+</div>
+
+<script src="{% static 'booking/js/slots.js' %}"></script>
 
 {% endblock %}
