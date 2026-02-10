@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-<!-- ================= HERO (IMAGE, NOT VIDEO) ================= -->
+<!-- ================= HERO ================= -->
 <section class="hero-static">
   <div class="hero-container container">
     <h1>
@@ -22,7 +22,7 @@
   </div>
 </section>
 
-<!-- ================= TRUST ================= -->
+<!-- ================= TRUST STRIP ================= -->
 <section class="trust-strip">
   <div class="container trust-grid">
     <div>Professionally Maintained</div>
@@ -37,6 +37,7 @@
   <div class="container">
     <h2>Available Turfs</h2>
 
+    {% if sports %}
     <div class="cards">
       {% for sport in sports %}
       <div class="card">
@@ -49,18 +50,23 @@
         <div class="card-body">
           <h3>{{ sport.name }}</h3>
           <p>International standard • Night lighting</p>
-          <a href="{% url 'slots' sport.id %}" class="card-btn">View Slots →</a>
+          <a href="{% url 'slots' sport.id %}" class="card-btn">
+            View Slots →
+          </a>
         </div>
       </div>
       {% endfor %}
     </div>
+    {% else %}
+      <p style="opacity:0.6;">No turfs available at the moment.</p>
+    {% endif %}
   </div>
 </section>
 
-<!-- ================= SINGLE CINEMATIC VIDEO ================= -->
+<!-- ================= CINEMATIC VIDEO ================= -->
 <section class="cinematic-section">
   <div class="cinematic-wrapper">
-    <video muted autoplay loop playsinline class="cinematic-video">
+    <video class="cinematic-video" autoplay muted loop playsinline>
       <source src="{% static 'booking/videos/turf_video.mp4' %}" type="video/mp4">
     </video>
 
