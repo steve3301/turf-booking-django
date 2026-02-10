@@ -51,11 +51,13 @@
 <!-- ================= AVAILABLE TURFS ================= -->
 <section class="turfs" id="turfs">
   <div class="container">
+
     <h2>Available Turfs</h2>
 
     <div class="cards">
       {% for sport in sports %}
       <div class="card">
+
         {% if sport.image %}
           <img src="{{ sport.image.url }}" alt="{{ sport.name }}">
         {% else %}
@@ -65,16 +67,15 @@
         <div class="card-body">
           <h3>{{ sport.name }}</h3>
           <p>International standard • Night lighting</p>
-          <a href="{% url 'slots' sport.id %}" class="card-btn">
-            View Slots →
-          </a>
+          <a href="{% url 'slots' sport.id %}" class="card-btn">View Slots →</a>
         </div>
+
       </div>
-      {% empty %}
-        <p style="opacity:.6">No turfs added yet</p>
       {% endfor %}
     </div>
+
   </div>
 </section>
+
 
 {% endblock %}

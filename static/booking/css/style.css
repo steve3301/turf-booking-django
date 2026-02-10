@@ -200,3 +200,31 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.slot.available.selected {
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+  color: #020617;
+  border-color: #22c55e;
+}
+
+.slot.available.selected .price {
+  color: #020617;
+}
+
+.slot.expired {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* === SAFETY GRID FIX === */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+}
+
+.card img {
+  width: 100%;
+  display: block;
+  border-radius: 18px 18px 0 0;
+}
