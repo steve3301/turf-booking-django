@@ -5,7 +5,7 @@
 
 <div class="slots-wrapper">
 
-  <!-- TOP -->
+  <!-- TOP HEADER -->
   <div class="slots-top">
     <h1>{{ sport.name }}</h1>
     <p>Choose your time. Lock your game.</p>
@@ -30,28 +30,30 @@
     <button class="filter">Evening</button>
   </div>
 
-  <!-- SLOT GRID -->
-  <div class="slots-grid">
+  <!-- SLOT GRID (🔥 FIXED) -->
+  <div class="slots-grid premium-grid">
 
     {% for slot in slots %}
+
       {% if slot.is_booked %}
         <div class="slot booked">
           <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
-          <span>Booked</span>
+          <span class="status booked">Booked</span>
         </div>
 
       {% elif slot.time.hour < current_hour and selected_date == today %}
-        <div class="slot booked">
+        <div class="slot expired">
           <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
-          <span>Expired</span>
+          <span class="status expired">Expired</span>
         </div>
 
       {% else %}
         <div class="slot available" data-id="{{ slot.id }}">
           <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
-          <span>₹{{ slot.price }}</span>
+          <span class="price">₹{{ slot.price }}</span>
         </div>
       {% endif %}
+
     {% endfor %}
 
   </div>

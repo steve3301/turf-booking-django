@@ -18,8 +18,8 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(2, 6, 23, 0.9);
-  backdrop-filter: blur(16px);
+  background: rgba(2, 6, 23, 0.92);
+  backdrop-filter: blur(18px);
   border-bottom: 1px solid #1f2937;
 }
 
@@ -42,7 +42,6 @@ body {
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background: #0f172a;
 }
 
 .brand-text {
@@ -57,7 +56,6 @@ body {
   color: #9ca3af;
   text-decoration: none;
   margin: 0 14px;
-  font-weight: 500;
 }
 
 .nav-links a:hover {
@@ -67,7 +65,7 @@ body {
 .nav-btn {
   background: linear-gradient(135deg, #22c55e, #4ade80);
   color: #020617;
-  padding: 10px 24px;
+  padding: 10px 26px;
   border-radius: 999px;
   font-weight: 700;
   text-decoration: none;
@@ -76,12 +74,9 @@ body {
 /* ================= SLOTS PAGE ================= */
 
 .slots-wrapper {
-  padding: 60px 8% 140px;
-}
-
-.slots-top {
-  text-align: left;
-  margin-bottom: 30px;
+  max-width: 1200px;
+  margin: auto;
+  padding: 60px 6% 140px;
 }
 
 .slots-top h1 {
@@ -111,8 +106,7 @@ body {
   text-align: center;
   text-decoration: none;
   color: #e5e7eb;
-  min-width: 72px;
-  transition: 0.2s;
+  min-width: 70px;
 }
 
 .date-box.active {
@@ -127,17 +121,16 @@ body {
 .slot-filters {
   display: flex;
   gap: 12px;
-  margin-bottom: 35px;
+  margin-bottom: 30px;
 }
 
 .filter {
-  padding: 10px 24px;
+  padding: 10px 22px;
   border-radius: 999px;
   border: 1px solid #1f2937;
   background: #020617;
   color: #9ca3af;
   cursor: pointer;
-  font-weight: 600;
 }
 
 .filter.active {
@@ -148,128 +141,13 @@ body {
 
 /* ================= SLOT GRID ================= */
 
-.slots-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 22px;
-}
-
-/* SLOT CARD */
-
-.slot {
-  background: linear-gradient(145deg, #020617, #0f172a);
-  border-radius: 18px;
-  padding: 18px 10px;
-  text-align: center;
-  border: 1px solid #1f2937;
-  transition: all 0.25s ease;
-}
-
-.slot h4 {
-  font-size: 16px;
-  margin-bottom: 6px;
-}
-
-.slot span {
-  font-size: 13px;
-  color: #9ca3af;
-}
-
-/* AVAILABLE */
-
-.slot.available:hover {
-  transform: translateY(-6px);
-  border-color: #22c55e;
-  cursor: pointer;
-}
-
-/* SELECTED */
-
-.slot.available.selected {
-  background: linear-gradient(135deg, #22c55e, #4ade80);
-  color: #020617;
-}
-
-.slot.available.selected span {
-  color: #020617;
-}
-
-/* BOOKED */
-
-.slot.booked {
-  opacity: 0.35;
-  background: #020617;
-  border-color: #ef4444;
-  cursor: not-allowed;
-}
-
-/* ================= BOOKING BAR ================= */
-
-.booking-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(2, 6, 23, 0.95);
-  backdrop-filter: blur(14px);
-  border-top: 1px solid #1f2937;
-  padding: 18px 10%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 1000;
-}
-
-.booking-bar span {
-  font-size: 15px;
-  color: #cbd5e1;
-}
-
-.booking-bar button {
-  background: linear-gradient(135deg, #22c55e, #4ade80);
-  border: none;
-  padding: 14px 36px;
-  border-radius: 999px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.booking-bar button:disabled {
-  background: #334155;
-  cursor: not-allowed;
-}
-
-/* ================= MOBILE ================= */
-
-@media (max-width: 768px) {
-  .slots-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .booking-bar {
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
-  }
-
-  .booking-bar button {
-    width: 100%;
-  }
-}
-
-/* ================= SLOT PAGE FIX ================= */
-
-.slots-wrapper {
-  max-width: 1200px;
-  margin: auto;
-  padding: 60px 6% 140px;
-}
-
 .slots-grid.premium-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 24px;
 }
+
+/* SLOT CARD */
 
 .slot {
   background: linear-gradient(145deg, #020617, #0f172a);
@@ -282,30 +160,33 @@ body {
 
 .slot h4 {
   font-size: 16px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
-.slot .price {
+.price {
   font-weight: 700;
   color: #22c55e;
 }
 
 /* STATES */
+
 .slot.available:hover {
   transform: translateY(-6px);
   border-color: #22c55e;
   cursor: pointer;
 }
 
-.slot.booked,
-.slot.expired {
-  opacity: 0.4;
-  background: #020617;
-  cursor: not-allowed;
+.slot.booked {
+  opacity: 0.35;
+  border-color: #ef4444;
 }
 
 .slot.booked span {
   color: #ef4444;
+}
+
+.slot.expired {
+  opacity: 0.35;
 }
 
 .slot.expired span {
@@ -313,9 +194,9 @@ body {
 }
 
 /* MOBILE */
+
 @media (max-width: 768px) {
-  .slots-grid {
+  .slots-grid.premium-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-  
