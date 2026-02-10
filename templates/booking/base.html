@@ -7,12 +7,12 @@
   <title>DUGOUT | Premium Turf Booking</title>
 
   <link rel="stylesheet" href="{% static 'booking/css/style.css' %}">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800;900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- ================= PREMIUM NAVBAR ================= -->
-<nav class="navbar navbar-premium">
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar">
   <div class="nav-container">
 
     <a href="{% url 'home' %}" class="brand">
@@ -31,11 +31,11 @@
   </div>
 </nav>
 
-<!-- ================= PAGE CONTENT ================= -->
+<!-- ================= CONTENT ================= -->
 {% block content %}{% endblock %}
 
 <!-- ================= FOOTER ================= -->
-<footer class="footer footer-premium">
+<footer class="footer">
   <p>© 2026 DUGOUT. All Rights Reserved.</p>
   <small>Premium Sports Infrastructure & Booking Platform</small>
 </footer>
