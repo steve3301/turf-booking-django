@@ -53,9 +53,9 @@
 <div class="booking-bar" id="bookingBar" style="display:none;">
   <span id="bookingText">0 slot selected</span>
 
-  <form method="POST" action="{% url 'user_details' %}">
+  <form method="POST" action="{% url 'user_details' %}" id="bookingForm">
     {% csrf_token %}
-    <input type="hidden" name="slots[]" id="selectedSlots">
+    <div id="selectedSlotsContainer"></div>
     <button type="submit">Proceed to Payment</button>
   </form>
 </div>

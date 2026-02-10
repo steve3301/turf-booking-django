@@ -228,3 +228,24 @@ body {
   display: block;
   border-radius: 18px 18px 0 0;
 }
+/* SLOT SELECTION FEEDBACK */
+.slot.available.selected {
+  background: #22c55e;
+  color: #020617;
+  border-color: #22c55e;
+}
+
+.slot.available.selected span {
+  color: #020617;
+}
+
+/* CENTER GRID */
+.slots-wrapper {
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* BOOKING BAR */
+.booking-bar {
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.6);
+}
