@@ -242,17 +242,86 @@ body {
    CINEMATIC VIDEO
 ===================================================== */
 
+/* ================= CINEMATIC VIDEO ================= */
+
+.cinematic-section {
+  background: #020617;
+}
+
 .cinematic-wrapper {
-  height: 65vh;
   position: relative;
+  height: 65vh;
+  overflow: hidden;
 }
 
 .cinematic-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0.45);
+  filter: brightness(0.55) contrast(1.05);
 }
+
+/* Dark overlay for readability */
+.cinematic-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(2,6,23,0.65),
+    rgba(2,6,23,0.85)
+  );
+}
+
+.cinematic-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  padding: 0 20px;
+}
+
+.cinematic-content h2 {
+  font-size: 48px;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.cinematic-content p {
+  font-size: 16px;
+  color: #cbd5e1;
+  max-width: 520px;
+  line-height: 1.6;
+}
+
+/* ================= MOBILE OPTIMIZATION ================= */
+@media (max-width: 768px) {
+  .cinematic-video {
+    display: none;
+  }
+
+  .cinematic-wrapper {
+    height: 40vh;
+    background:
+      linear-gradient(
+        rgba(2,6,23,0.85),
+        rgba(2,6,23,0.9)
+      ),
+      url("/static/booking/images/turf.jpg") center / cover no-repeat;
+  }
+
+  .cinematic-content h2 {
+    font-size: 28px;
+  }
+
+  .cinematic-content p {
+    font-size: 14px;
+  }
+}
+
 
 /* =====================================================
    GALLERY

@@ -22,22 +22,37 @@
   </div>
 </section>
 
-<!-- ================= TRUST STRIP ================= -->
-<section class="trust-strip">
-  <div class="container trust-grid">
-    <div>Professionally Maintained</div>
-    <div>Real-Time Availability</div>
-    <div>Secure Online Booking</div>
-    <div>Trusted by Local Teams</div>
+<!-- ================= CINEMATIC VIDEO (BEST POSITION) ================= -->
+<section class="cinematic-section">
+  <div class="cinematic-wrapper">
+    <video
+      class="cinematic-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+    >
+      <source src="{% static 'booking/videos/turf_video.mp4' %}" type="video/mp4">
+    </video>
+
+    <div class="cinematic-overlay"></div>
+
+    <div class="cinematic-content">
+      <h2>Built for Serious Play</h2>
+      <p>
+        Designed for performance, safety, and consistency.<br>
+        Trusted by players who value quality.
+      </p>
+    </div>
   </div>
 </section>
 
-<!-- ================= TURFS ================= -->
+<!-- ================= AVAILABLE TURFS ================= -->
 <section class="turfs" id="turfs">
   <div class="container">
     <h2>Available Turfs</h2>
 
-    {% if sports %}
     <div class="cards">
       {% for sport in sports %}
       <div class="card">
@@ -55,29 +70,9 @@
           </a>
         </div>
       </div>
+      {% empty %}
+        <p style="opacity:.6">No turfs added yet</p>
       {% endfor %}
-    </div>
-    {% else %}
-      <p style="opacity:0.6;">No turfs available at the moment.</p>
-    {% endif %}
-  </div>
-</section>
-
-<!-- ================= CINEMATIC VIDEO ================= -->
-<section class="cinematic-section">
-  <div class="cinematic-wrapper">
-    <video class="cinematic-video" autoplay muted loop playsinline>
-      <source src="{% static 'booking/videos/turf_video.mp4' %}" type="video/mp4">
-    </video>
-
-    <div class="cinematic-overlay"></div>
-
-    <div class="cinematic-content">
-      <h2>Built for Serious Play</h2>
-      <p>
-        Designed for performance, safety, and consistency.<br>
-        Trusted by players who value quality.
-      </p>
     </div>
   </div>
 </section>
