@@ -256,3 +256,66 @@ body {
     width: 100%;
   }
 }
+
+/* ================= SLOT PAGE FIX ================= */
+
+.slots-wrapper {
+  max-width: 1200px;
+  margin: auto;
+  padding: 60px 6% 140px;
+}
+
+.slots-grid.premium-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.slot {
+  background: linear-gradient(145deg, #020617, #0f172a);
+  border-radius: 18px;
+  padding: 22px 14px;
+  border: 1px solid #1f2937;
+  text-align: center;
+  transition: 0.25s ease;
+}
+
+.slot h4 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.slot .price {
+  font-weight: 700;
+  color: #22c55e;
+}
+
+/* STATES */
+.slot.available:hover {
+  transform: translateY(-6px);
+  border-color: #22c55e;
+  cursor: pointer;
+}
+
+.slot.booked,
+.slot.expired {
+  opacity: 0.4;
+  background: #020617;
+  cursor: not-allowed;
+}
+
+.slot.booked span {
+  color: #ef4444;
+}
+
+.slot.expired span {
+  color: #94a3b8;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .slots-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+  
