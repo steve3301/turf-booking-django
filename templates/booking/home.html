@@ -20,7 +20,7 @@
 
     <p>
       Professionally managed football & cricket turfs.<br>
-      Transparent pricing • Real-time slots • Trusted bookings
+      Transparent pricing • Real-time availability • Trusted bookings
     </p>
 
     <div class="hero-buttons">
@@ -29,6 +29,28 @@
     </div>
   </div>
 
+</section>
+
+<!-- ================= TRUST STRIP ================= -->
+<section style="
+  background:#0b0c0e;
+  border-top:1px solid #1f2937;
+  border-bottom:1px solid #1f2937;
+  padding:30px 8%;
+">
+  <div style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:25px;
+    text-align:center;
+    color:#cbd5e1;
+    font-size:14px;
+  ">
+    <div>✔ Professionally Maintained Turfs</div>
+    <div>✔ Real-Time Slot Availability</div>
+    <div>✔ Secure Online Booking</div>
+    <div>✔ Trusted by Local Teams</div>
+  </div>
 </section>
 
 <!-- ================= TURFS ================= -->
@@ -47,15 +69,42 @@
 
       <div class="card-body">
         <h3>{{ sport.name }}</h3>
-        <p>Professional surface • Night lighting • Maintained daily</p>
+        <p>
+          International-standard surface<br>
+          Night lighting • Daily maintenance
+        </p>
+
         <a href="{% url 'slots' sport.id %}" class="card-btn">
           View Slots →
         </a>
       </div>
 
     </div>
+    {% empty %}
+      <p style="color:#94a3b8;">No turfs available at the moment.</p>
     {% endfor %}
   </div>
+</section>
+
+<!-- ================= CINEMATIC STORY VIDEO ================= -->
+<section class="cinematic-section">
+
+  <div class="cinematic-wrapper">
+    <video autoplay muted loop playsinline class="cinematic-video">
+      <source src="{% static 'booking/videos/turf_video.mp4' %}" type="video/mp4">
+    </video>
+
+    <div class="cinematic-overlay"></div>
+
+    <div class="cinematic-content">
+      <h2>Built for Serious Play</h2>
+      <p>
+        Designed for performance, safety, and consistency —  
+        our turfs are trusted by players who value quality.
+      </p>
+    </div>
+  </div>
+
 </section>
 
 {% endblock %}
