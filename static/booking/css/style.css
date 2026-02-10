@@ -1077,21 +1077,24 @@
   font-size: 18px;
 }
 
-/* ================= TRUST ================= */
+
+/* ================= TRUST STRIP ================= */
 .trust-strip {
-  border-top: 1px solid #1f1f1f;
-  border-bottom: 1px solid #1f1f1f;
-  padding: 30px 0;
   background: #0b0c0e;
+  border-top: 1px solid #1f2937;
+  border-bottom: 1px solid #1f2937;
+  padding: 24px 0;
 }
 
 .trust-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
-  gap: 24px;
-  font-size: 14px;
-  color: #cfcfcf;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  font-size: 13px;
+  color: #cbd5e1;
+  letter-spacing: 0.3px;
 }
+
 
 /* ================= CINEMATIC VIDEO ================= */
 .cinematic-wrapper {
@@ -1116,4 +1119,26 @@
       linear-gradient(rgba(0,0,0,.9), rgba(0,0,0,.9)),
       url("/static/booking/images/turf.jpg") center / cover no-repeat;
   }
+}
+
+/* ================= HERO FIX ================= */
+.hero-static {
+  min-height: 85vh;
+  background:
+    linear-gradient(
+      to right,
+      rgba(2,6,23,0.95),
+      rgba(2,6,23,0.85),
+      rgba(2,6,23,0.6)
+    ),
+    url("/static/booking/images/turf.jpg") center / cover no-repeat !important;
+
+  display: flex;
+  align-items: center;
+}
+
+/* ================= GLOBAL CONTAINER ================= */
+.container {
+  max-width: 1200px;
+  margin: auto;
 }
