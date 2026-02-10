@@ -1,6 +1,19 @@
 /* =====================================================
-   GLOBAL RESET
+   GLOBAL RESET & VARIABLES (FERRARI STYLE)
 ===================================================== */
+
+:root {
+  --black-900: #0b0b0b;
+  --black-800: #111111;
+  --black-700: #181818;
+  --black-600: #1f1f1f;
+
+  --grey-500: #9ca3af;
+  --grey-400: #d1d5db;
+
+  --white: #ffffff;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -9,29 +22,30 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  background: radial-gradient(circle at top, #0f172a, #020617);
-  color: white;
+  background: var(--black-900);
+  color: var(--white);
+  -webkit-font-smoothing: antialiased;
 }
 
 /* =====================================================
    NAVBAR
 ===================================================== */
+
 .navbar {
   position: sticky;
   top: 0;
   z-index: 999;
-  background: rgba(2,6,23,0.88);
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid #1f2937;
-  padding: 14px 0;
+  background: var(--black-800);
+  border-bottom: 1px solid #1f1f1f;
 }
 
 .nav-container {
   width: 92%;
   margin: auto;
+  padding: 16px 0;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .brand {
@@ -41,55 +55,56 @@ body {
 }
 
 .logo {
-  height: 46px;
-  width: 46px;
+  width: 42px;
+  height: 42px;
   object-fit: contain;
-  border-radius: 12px;
-  background: #0f172a;
-  padding: 6px;
-  box-shadow: 0 0 6px rgba(0,0,0,0.6);
+  background: #111;
+  border-radius: 8px;
 }
 
 .brand-text {
-  font-size: 28px;
-  font-weight: 900;
-  background: linear-gradient(135deg, #22c55e, #4ade80);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--white);
 }
 
 .nav-links a {
   margin: 0 16px;
-  color: #94a3b8;
   text-decoration: none;
-  font-weight: 500;
+  color: var(--grey-500);
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .nav-links a:hover {
-  color: #22c55e;
+  color: var(--white);
 }
 
 .nav-btn {
-  background: linear-gradient(135deg, #22c55e, #4ade80);
+  border: 1px solid var(--grey-500);
+  color: var(--white);
   padding: 10px 24px;
   border-radius: 999px;
-  color: black;
-  font-weight: bold;
   text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.nav-btn:hover {
+  background: var(--white);
+  color: var(--black-900);
 }
 
 /* =====================================================
-   HERO
+   HERO SECTION
 ===================================================== */
+
 .hero-static {
   min-height: 85vh;
   background:
-    linear-gradient(
-      to right,
-      rgba(2,6,23,0.95),
-      rgba(2,6,23,0.8),
-      rgba(2,6,23,0.5)
-    ),
+    linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.9)),
     url("/static/booking/images/turf.jpg") center / cover no-repeat;
   display: flex;
   align-items: center;
@@ -101,61 +116,71 @@ body {
 }
 
 .hero-static h1 {
-  font-size: 60px;
-  font-weight: 900;
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
 }
 
 .hero-static p {
-  margin: 20px 0 32px;
-  color: #cbd5e1;
+  margin: 24px 0 36px;
+  color: var(--grey-500);
   font-size: 18px;
 }
 
 .hero-buttons a {
   display: inline-block;
-  padding: 14px 32px;
+  margin-right: 14px;
+  padding: 14px 34px;
   border-radius: 999px;
   text-decoration: none;
-  font-weight: 700;
-  margin-right: 14px;
+  font-size: 14px;
+  letter-spacing: 1px;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #22c55e, #4ade80);
-  color: black;
+  border: 1px solid var(--white);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background: var(--white);
+  color: var(--black-900);
 }
 
 .btn-secondary {
-  border: 2px solid #22c55e;
-  color: #22c55e;
+  color: var(--grey-500);
 }
 
 /* =====================================================
    TRUST STRIP
 ===================================================== */
+
 .trust-strip {
-  background: #0b0c0e;
-  border-top: 1px solid #1f2937;
-  border-bottom: 1px solid #1f2937;
-  padding: 24px 0;
+  background: var(--black-800);
+  border-top: 1px solid #1f1f1f;
+  border-bottom: 1px solid #1f1f1f;
+  padding: 26px 0;
 }
 
 .trust-grid {
-  width: 80%;
+  width: 90%;
   margin: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
   text-align: center;
   font-size: 13px;
-  color: #cbd5e1;
+  letter-spacing: 1px;
+  color: var(--grey-500);
 }
 
 /* =====================================================
-   TURFS
+   TURF CARDS
 ===================================================== */
+
 .turfs {
-  padding: 80px 8%;
+  padding: 90px 8%;
 }
 
 .turfs h2 {
@@ -165,21 +190,15 @@ body {
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
-  gap: 35px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 36px;
 }
 
 .card {
-  background: #020617;
-  border-radius: 22px;
+  background: var(--black-800);
+  border: 1px solid #1f1f1f;
+  border-radius: 18px;
   overflow: hidden;
-  border: 1px solid #1f2937;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-  transition: transform 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-8px);
 }
 
 .card img {
@@ -189,16 +208,16 @@ body {
 }
 
 .card-body {
-  padding: 22px;
+  padding: 24px;
 }
 
 .card-body h3 {
-  font-size: 22px;
+  font-size: 20px;
   margin-bottom: 10px;
 }
 
 .card-body p {
-  color: #94a3b8;
+  color: var(--grey-500);
   font-size: 14px;
 }
 
@@ -206,81 +225,98 @@ body {
   display: block;
   margin-top: 18px;
   padding: 12px;
-  background: linear-gradient(135deg, #22c55e, #4ade80);
-  border-radius: 14px;
   text-align: center;
-  font-weight: bold;
+  border: 1px solid var(--grey-500);
+  border-radius: 12px;
+  color: var(--white);
   text-decoration: none;
-  color: black;
+  font-size: 14px;
+}
+
+.card-btn:hover {
+  background: var(--white);
+  color: var(--black-900);
 }
 
 /* =====================================================
    CINEMATIC VIDEO
 ===================================================== */
+
 .cinematic-wrapper {
-  position: relative;
   height: 65vh;
+  position: relative;
 }
 
 .cinematic-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0.55);
+  filter: brightness(0.45);
 }
 
-.cinematic-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
+/* =====================================================
+   GALLERY
+===================================================== */
+
+.gallery-container {
+  padding: 90px 8%;
 }
 
-.cinematic-content {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+.gallery-title {
+  font-size: 48px;
 }
 
-.cinematic-content h2 {
-  font-size: 42px;
-  margin-bottom: 10px;
+.gallery-subtitle {
+  color: var(--grey-500);
+  margin-bottom: 40px;
 }
 
-.cinematic-content p {
-  color: #cbd5e1;
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
+}
+
+.gallery-card {
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
 }
 
 /* =====================================================
    FOOTER
 ===================================================== */
+
 .footer {
-  background: black;
+  background: var(--black-800);
+  border-top: 1px solid #1f1f1f;
+  padding: 26px;
   text-align: center;
-  padding: 22px;
-  color: #64748b;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--grey-500);
 }
 
 /* =====================================================
    RESPONSIVE
 ===================================================== */
+
 @media (max-width: 768px) {
   .hero-static h1 {
-    font-size: 34px;
+    font-size: 38px;
   }
 
   .hero-container {
-    padding-left: 5%;
+    padding: 20px;
+    text-align: center;
   }
 
   .nav-links {
     display: none;
-  }
-
-  .cards {
-    grid-template-columns: 1fr;
   }
 }
