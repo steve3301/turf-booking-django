@@ -903,3 +903,31 @@
     opacity: 1;
   }
 }
+
+/* ===== STAFF SLOT COLORS ===== */
+
+.slot.available {
+  border-color: #22c55e;
+}
+
+.slot.available span {
+  color: #22c55e;
+}
+
+.slot.booked {
+  background: #7f1d1d;
+  border-color: #ef4444;
+}
+
+.slot.booked span {
+  color: #f87171;
+}
+
+.slot.expired {
+  background: #1e293b;
+  opacity: 0.5;
+}
+
+.slot.expired span {
+  color: #94a3b8;
+}

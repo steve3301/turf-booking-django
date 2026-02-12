@@ -21,6 +21,8 @@ urlpatterns = [
     # ---------- VERIFY & DOWNLOAD ----------
     path("verify/<uuid:booking_id>/", views.verify_booking, name="verify_booking"),
     path("download/<uuid:booking_id>/", views.download_booking_pdf, name="download_booking_pdf"),
+    path("staff/toggle/<int:slot_id>/", views.toggle_slot_booking, name="toggle_slot_booking"),
+
 
     # ---------- STATIC ----------
     path("gallery/", views.gallery, name="gallery"),
