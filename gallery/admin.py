@@ -1,39 +1,17 @@
 from django.contrib import admin
-from django import forms
 from .models import GalleryImage
 
 
-class MultiImageUploadForm(forms.ModelForm):
-    images = forms.FileField(
-        widget=forms.FileInput(attrs={"multiple": True}),
-        required=False
-    )
-
-    class Meta:
-        model = GalleryImage
-        fields = ["images"]
-
-
-@admin.register(GalleryImage)
 class GalleryImageAdmin(admin.ModelAdmin):
-    change_list_template = "admin/gallery_upload.html"
+    list_display = ("id", "image", "active")
 
-    def get_urls(self):
-        from django.urls import path
-        urls = super().get_urls()
-        custom_urls = [
-            path("upload-multiple/", self.admin_site.admin_view(self.upload_multiple), name="upload-multiple"),
-        ]
-        return custom_urls + urls
-
-    def upload_multiple(self, request):
-        if request.method == "POST":
-            files = request.FILES.getlist("images")
+    def save_model(self, request, obj, form, change):
+        files = request.FILES.getlist("image")
+        if files:
             for f in files:
                 GalleryImage.objects.create(image=f)
-            self.message_user(request, "Images uploaded successfully.")
-            from django.shortcuts import redirect
-            return redirect("..")
+        else:
+            super().save_model(request, obj, form, change)
 
-        from django.shortcuts import render
-        return render(request, "admin/gallery_upload.html")
+
+admin.site.register(GalleryImage, GalleryImageAdmin)
