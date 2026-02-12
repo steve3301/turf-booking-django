@@ -37,32 +37,33 @@
 
   <!-- ================= SLOT GRID ================= -->
   <div class="slots-grid">
-  {% for slot in slots %}
+    {% for slot in slots %}
 
-    {% if slot.is_booked %}
-      <div class="slot-card booked">
-        <div class="time">{{ slot.display_time }}</div>
-        <div class="status">BOOKED</div>
-      </div>
+      {% if slot.is_booked %}
+        <div class="slot-card booked">
+          <div class="time">{{ slot.start_label }} – {{ slot.end_label }}</div>
+          <div class="status">BOOKED</div>
+        </div>
 
-    {% elif selected_date == today and slot.time.hour < current_hour %}
-      <div class="slot-card expired">
-        <div class="time">{{ slot.display_time }}</div>
-        <div class="status">EXPIRED</div>
-      </div>
+      {% elif selected_date == today and slot.time.hour < current_hour %}
+        <div class="slot-card booked">
+          <div class="time">{{ slot.start_label }} – {{ slot.end_label }}</div>
+          <div class="status">EXPIRED</div>
+        </div>
 
-    {% else %}
-      <div class="slot-card free"
-           data-id="{{ slot.id }}"
-           onclick="toggleSlot(this)">
-        <div class="time">{{ slot.display_time }}</div>
-        <div class="status">AVAILABLE</div>
-      </div>
-    {% endif %}
+      {% else %}
+        <div class="slot-card free"
+             data-id="{{ slot.id }}"
+             onclick="toggleSlot(this)">
+          <div class="time">{{ slot.start_label }} – {{ slot.end_label }}</div>
+          <div class="status">AVAILABLE</div>
+        </div>
+      {% endif %}
 
-  {% endfor %}
+    {% endfor %}
+  </div>
+
 </div>
-
 
 <!-- ================= JS ================= -->
 <script>

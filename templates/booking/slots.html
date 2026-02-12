@@ -1,54 +1,142 @@
 {% extends "booking/base.html" %}
 {% load static %}
+
 {% block content %}
+<link rel="stylesheet" href="{% static 'booking/css/style.css' %}">
 
-<div class="container" style="padding:80px 0">
+<div class="slots-wrapper">
 
-  <h1 style="margin-bottom:10px">{{ sport.name }}</h1>
-  <p style="color:#94a3b8;margin-bottom:30px">Choose your time. Lock your game.</p>
+  <div class="slots-top">
+    <h1>{{ sport.name }}</h1>
+    <p>Choose your time. Lock your game.</p>
+  </div>
 
-  <div class="date-strip" style="display:flex;gap:12px;margin-bottom:40px;overflow-x:auto">
+  <!-- DATE STRIP -->
+  <div class="date-strip">
     {% for d in dates %}
       <a href="?date={{ d|date:'Y-m-d' }}"
-         class="date-box {% if d == selected_date %}active{% endif %}"
-         style="padding:14px 18px;border-radius:14px;border:1px solid #1f2937;text-decoration:none;color:white">
-        <small>{{ d|date:"D" }}</small><br>
-        <strong>{{ d|date:"d" }}</strong>
+         class="date-box {% if d == selected_date %}active{% endif %}">
+        <strong>{{ d|date:"D" }}</strong>
+        <span>{{ d|date:"d" }}</span>
+        <small>{{ d|date:"M" }}</small>
       </a>
     {% endfor %}
   </div>
 
-  <div class="cards">
+  <!-- FILTERS -->
+  <div class="slot-filters">
+    <button type="button" class="filter active" onclick="filterSlots('all', this)">All</button>
+    <button type="button" class="filter" onclick="filterSlots('morning', this)">Morning</button>
+    <button type="button" class="filter" onclick="filterSlots('afternoon', this)">Afternoon</button>
+    <button type="button" class="filter" onclick="filterSlots('evening', this)">Evening</button>
+  </div>
+
+  <!-- SLOT GRID -->
+  <div class="slots-grid">
     {% for slot in slots %}
 
       {% if slot.is_booked %}
-        <div class="card">
-          <div class="card-body">
-            <h3>{{ slot.start_label }} – {{ slot.end_label }}</h3>
-            <p>Booked</p>
-          </div>
+        <div class="slot booked" data-hour="{{ slot.time.hour }}">
+          <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
+          <span>Booked</span>
         </div>
 
-      {% elif slot.time.hour < current_hour and selected_date == today %}
-        <div class="card">
-          <div class="card-body">
-            <h3>{{ slot.start_label }} – {{ slot.end_label }}</h3>
-            <p>Expired</p>
-          </div>
+      {% elif selected_date == today and slot.time.hour < current_hour %}
+        <div class="slot booked" data-hour="{{ slot.time.hour }}">
+          <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
+          <span>Expired</span>
         </div>
 
       {% else %}
-        <div class="card">
-          <div class="card-body">
-            <h3>{{ slot.start_label }} – {{ slot.end_label }}</h3>
-            <p>₹{{ slot.price }}</p>
-          </div>
+        <div class="slot available"
+             data-hour="{{ slot.time.hour }}"
+             data-id="{{ slot.id }}"
+             data-price="{{ slot.price }}"
+             onclick="toggleSelect(this)">
+          <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
+          <span>₹{{ slot.price }}</span>
         </div>
       {% endif %}
 
     {% endfor %}
   </div>
-
 </div>
+
+<!-- BOTTOM BAR -->
+<div class="booking-bar">
+  <span>
+    <strong id="count">0</strong> slot(s) selected |
+    ₹<span id="total">0</span>
+  </span>
+  <button id="proceedBtn" disabled onclick="submitBooking()">Proceed</button>
+</div>
+
+<form id="bookingForm" method="POST" action="{% url 'user_details' %}">
+  {% csrf_token %}
+</form>
+
+<script>
+let selectedSlots = new Map();
+
+// SLOT SELECT
+function toggleSelect(el) {
+  if (el.classList.contains("booked")) return;
+
+  const slotId = el.dataset.id;
+  const price = parseInt(el.dataset.price);
+
+  if (el.classList.contains("selected")) {
+    el.classList.remove("selected");
+    selectedSlots.delete(slotId);
+  } else {
+    el.classList.add("selected");
+    selectedSlots.set(slotId, price);
+  }
+
+  updateSummary();
+}
+
+function updateSummary() {
+  let total = 0;
+  selectedSlots.forEach(p => total += p);
+
+  document.getElementById("count").innerText = selectedSlots.size;
+  document.getElementById("total").innerText = total;
+  document.getElementById("proceedBtn").disabled = selectedSlots.size === 0;
+}
+
+// FILTER
+function filterSlots(type, btn) {
+  document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+
+  document.querySelectorAll(".slot").forEach(slot => {
+    const hour = parseInt(slot.dataset.hour);
+    slot.style.display = "block";
+
+    if (type === "morning" && !(hour >= 0 && hour < 12)) slot.style.display = "none";
+    if (type === "afternoon" && !(hour >= 12 && hour < 17)) slot.style.display = "none";
+    if (type === "evening" && !(hour >= 17 && hour <= 23)) slot.style.display = "none";
+  });
+}
+
+// SUBMIT
+function submitBooking() {
+  const form = document.getElementById("bookingForm");
+
+  // Remove old inputs
+  form.querySelectorAll("input[name='slots[]']").forEach(e => e.remove());
+
+  selectedSlots.forEach((price, id) => {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "slots[]";
+    input.value = id;
+    form.appendChild(input);
+  });
+
+  form.submit();
+}
+</script>
 
 {% endblock %}
