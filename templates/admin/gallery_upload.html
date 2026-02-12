@@ -1,0 +1,16 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<h2>Upload Multiple Images</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="images" multiple required>
+    <br><br>
+    <button type="submit" class="default">Upload</button>
+</form>
+
+<br>
+<a href="../">← Back to Gallery</a>
+
+{% endblock %}
