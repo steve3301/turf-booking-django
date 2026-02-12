@@ -189,14 +189,18 @@
 
   /* ================= TURFS ================= */
 
-  .turfs {
-      padding: 80px 8%;
-  }
+ .turfs {
+    padding: 80px 8%;
+    text-align: center;
+}
+
 
   .turfs h2 {
-      font-size: 44px;
-      margin-bottom: 40px;
-  }
+    font-size: 44px;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
 
   .cards {
     display: flex;
