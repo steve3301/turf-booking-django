@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'booking/css/style.css' %}">
 
 <div class="slots-wrapper">
 
@@ -32,7 +31,8 @@
   </div>
 
   <!-- SLOT GRID -->
-  <div class="slots-grid">
+  <div class="slots-grid premium-grid">
+
     {% for slot in slots %}
 
       {% if slot.is_booked %}
@@ -42,7 +42,7 @@
         </div>
 
       {% elif selected_date == today and slot.time.hour < current_hour %}
-        <div class="slot booked" data-hour="{{ slot.time.hour }}">
+        <div class="slot expired" data-hour="{{ slot.time.hour }}">
           <h4>{{ slot.start_label }} – {{ slot.end_label }}</h4>
           <span>Expired</span>
         </div>
@@ -59,6 +59,7 @@
       {% endif %}
 
     {% endfor %}
+
   </div>
 </div>
 
@@ -78,9 +79,8 @@
 <script>
 let selectedSlots = new Map();
 
-// SLOT SELECT
 function toggleSelect(el) {
-  if (el.classList.contains("booked")) return;
+  if (el.classList.contains("booked") || el.classList.contains("expired")) return;
 
   const slotId = el.dataset.id;
   const price = parseInt(el.dataset.price);
@@ -105,7 +105,6 @@ function updateSummary() {
   document.getElementById("proceedBtn").disabled = selectedSlots.size === 0;
 }
 
-// FILTER
 function filterSlots(type, btn) {
   document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
@@ -120,11 +119,9 @@ function filterSlots(type, btn) {
   });
 }
 
-// SUBMIT
 function submitBooking() {
   const form = document.getElementById("bookingForm");
 
-  // Remove old inputs
   form.querySelectorAll("input[name='slots[]']").forEach(e => e.remove());
 
   selectedSlots.forEach((price, id) => {

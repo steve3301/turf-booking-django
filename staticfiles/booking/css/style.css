@@ -1,4 +1,4 @@
-/* ================= GLOBAL ================= */
+/* GLOBAL */
 
 * {
   margin: 0;
@@ -12,7 +12,7 @@ body {
   color: #e5e7eb;
 }
 
-/* ================= NAVBAR ================= */
+/* NAVBAR */
 
 .navbar {
   position: sticky;
@@ -32,46 +32,7 @@ body {
   padding: 14px 0;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.logo {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-}
-
-.brand-text {
-  font-size: 26px;
-  font-weight: 900;
-  background: linear-gradient(135deg, #22c55e, #4ade80);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.nav-links a {
-  color: #9ca3af;
-  text-decoration: none;
-  margin: 0 14px;
-}
-
-.nav-links a:hover {
-  color: #22c55e;
-}
-
-.nav-btn {
-  background: linear-gradient(135deg, #22c55e, #4ade80);
-  color: #020617;
-  padding: 10px 26px;
-  border-radius: 999px;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-/* ================= SLOTS PAGE ================= */
+/* SLOTS PAGE */
 
 .slots-wrapper {
   max-width: 1200px;
@@ -89,8 +50,6 @@ body {
   margin-top: 6px;
 }
 
-/* DATE STRIP */
-
 .date-strip {
   display: flex;
   gap: 14px;
@@ -106,7 +65,6 @@ body {
   text-align: center;
   text-decoration: none;
   color: #e5e7eb;
-  min-width: 70px;
 }
 
 .date-box.active {
@@ -139,7 +97,7 @@ body {
   border: none;
 }
 
-/* ================= SLOT GRID ================= */
+/* GRID */
 
 .slots-grid.premium-grid {
   display: grid;
@@ -158,45 +116,52 @@ body {
   transition: 0.25s ease;
 }
 
-.slot h4 {
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
-.price {
-  font-weight: 700;
-  color: #22c55e;
-}
-
-/* STATES */
-
 .slot.available:hover {
   transform: translateY(-6px);
   border-color: #22c55e;
   cursor: pointer;
 }
 
+.slot.selected {
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+  color: #020617;
+  border: none;
+}
+
 .slot.booked {
-  opacity: 0.35;
+  opacity: 0.4;
   border-color: #ef4444;
 }
 
-.slot.booked span {
-  color: #ef4444;
-}
-
 .slot.expired {
-  opacity: 0.35;
+  opacity: 0.4;
 }
 
-.slot.expired span {
-  color: #94a3b8;
+/* BOTTOM BAR */
+
+.booking-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #020617;
+  padding: 18px 40px;
+  border-top: 1px solid #1f2937;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* MOBILE */
+.booking-bar button {
+  padding: 10px 24px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+  font-weight: 700;
+  cursor: pointer;
+}
 
-@media (max-width: 768px) {
-  .slots-grid.premium-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.booking-bar button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
