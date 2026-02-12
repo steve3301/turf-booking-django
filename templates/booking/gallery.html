@@ -1,40 +1,42 @@
-{% extends 'booking/base.html' %}
+{% extends "booking/base.html" %}
 {% load static %}
 
-
 {% block content %}
-<section style="padding: 80px 8%;">
 
-  <h1 style="font-size: 48px; margin-bottom: 20px;">Gallery</h1>
-  <p style="color: #94a3b8; margin-bottom: 40px;">
-    Explore our premium turf experience
-  </p>
+<section class="premium-gallery">
+    <div class="gallery-header">
+        <h1>Gallery</h1>
+        <p>Explore our premium turf experience</p>
+    </div>
 
-  {% if images %}
-  <div style="
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 25px;
-  ">
-    {% for img in images %}
-      <div style="overflow:hidden;border-radius:20px;">
-        <img src="{{ img.image.url }}"
-             alt="{{ img.title }}"
-             style="
-               width:100%;
-               height:220px;
-               object-fit:cover;
-               border-radius:20px;
-               transition:transform .3s ease;
-             "
-             onmouseover="this.style.transform='scale(1.05)'"
-             onmouseout="this.style.transform='scale(1)'">
-      </div>
-    {% endfor %}
-  </div>
-  {% else %}
-    <p style="color:#94a3b8;">No images uploaded yet.</p>
-  {% endif %}
-
+    <div class="masonry-grid">
+        {% for image in images %}
+        <div class="masonry-item">
+            <img src="{{ image.image.url }}" alt="Gallery Image">
+        </div>
+        {% endfor %}
+    </div>
 </section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+    <img id="lightbox-img">
+</div>
+
+<script>
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+
+document.querySelectorAll(".masonry-item img").forEach(img => {
+    img.addEventListener("click", () => {
+        lightbox.style.display = "flex";
+        lightboxImg.src = img.src;
+    });
+});
+
+lightbox.addEventListener("click", () => {
+    lightbox.style.display = "none";
+});
+</script>
+
 {% endblock %}
